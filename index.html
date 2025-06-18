@@ -640,7 +640,8 @@ Très commun en ville, non insecte.`
     }
 
     function getImagePath(speciesName) {
-      return `images/${speciesName}.jpg`;
+      // Essayer d'abord avec .png, puis .jpg si ça ne marche pas
+      return `images/${encodeURIComponent(speciesName)}.png`;
     }
 
     // === DÉMARRAGE DU JEU ===
@@ -709,7 +710,14 @@ Très commun en ville, non insecte.`
         img.src = getImagePath(item);
         img.alt = item;
         img.onerror = function() {
-          imgContainer.innerHTML = `<div style="text-align:center; font-size:0.8em; color:#666;">📷<br>Image manquante</div>`;
+          // Si .png ne marche pas, essayer .jpg
+          const fallbackSrc = `images/${encodeURIComponent(item)}.jpg`;
+          if (this.src !== fallbackSrc) {
+            this.src = fallbackSrc;
+          } else {
+            // Si aucun des deux ne marche, afficher le placeholder
+            imgContainer.innerHTML = `<div style="text-align:center; font-size:0.8em; color:#666;">📷<br>Image manquante</div>`;
+          }
         };
         imgContainer.appendChild(img);
         
