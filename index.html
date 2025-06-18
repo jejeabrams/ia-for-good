@@ -2,295 +2,249 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Jeu : Trouve l'intrus - Les Héros Invisibles</title>
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
     body {
-      font-family: 'Arial', sans-serif;
-      background: url('fond.png') center/cover no-repeat fixed,
-                  linear-gradient(135deg, rgba(128,194,65,0.8) 0%, rgba(163,227,245,0.8) 100%);
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      text-align: center;
+      padding: 10px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
       color: #2c3e50;
       min-height: 100vh;
+      position: relative;
       overflow-x: hidden;
     }
-    
+
+    /* Animation de fond */
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: 
+        radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.3) 0%, transparent 50%),
+        radial-gradient(circle at 40% 40%, rgba(120, 219, 255, 0.2) 0%, transparent 50%);
+      animation: float 6s ease-in-out infinite;
+      z-index: -1;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0px) rotate(0deg); }
+      50% { transform: translateY(-20px) rotate(1deg); }
+    }
+
+    /* Container principal */
     .container {
       max-width: 1200px;
       margin: 0 auto;
-      padding: 15px;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
+      padding: 0 15px;
     }
-    
-    header {
-      text-align: center;
-      padding: 20px;
-      background: rgba(255,255,255,0.95);
-      border-radius: 25px;
-      margin-bottom: 20px;
-      box-shadow: 0 8px 32px rgba(0,0,0,0.1);
-      backdrop-filter: blur(10px);
+
+    /* Titre principal */
+    h1 {
+      color: #fff;
+      font-size: clamp(1.5rem, 4vw, 2.5rem);
+      margin-bottom: 10px;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+      font-weight: 700;
     }
-    
-    h1 { 
-      color: #27ae60; 
-      font-size: clamp(1.8rem, 5vw, 3rem);
-      margin-bottom: 15px;
-      text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
-    }
-    
+
     .subtitle {
-      font-size: clamp(1.2rem, 3.5vw, 1.5rem);
-      color: #34495e;
+      color: rgba(255,255,255,0.9);
+      font-size: clamp(0.9rem, 2.5vw, 1.1rem);
       margin-bottom: 25px;
-      font-weight: bold;
+      font-weight: 300;
     }
-    
-    #level-buttons { 
-      display: flex; 
-      gap: 15px; 
-      justify-content: center;
-      flex-wrap: wrap;
-    }
-    
-    #level-buttons button {
-      padding: 20px 30px;
-      background: linear-gradient(135deg, #27ae60, #2ecc71);
-      border: none;
-      color: white;
-      border-radius: 30px;
-      cursor: pointer;
-      font-size: clamp(1.2rem, 3vw, 1.5rem);
-      font-weight: bold;
-      transition: all 0.3s ease;
-      box-shadow: 0 6px 20px rgba(39,174,96,0.3);
-      min-width: 120px;
-    }
-    
-    #level-buttons button:hover { 
-      transform: translateY(-3px);
-      box-shadow: 0 10px 30px rgba(39,174,96,0.4);
-    }
-    
-    .game-info {
+
+    /* Boutons de niveau */
+    #level-buttons {
+      margin: 25px 0;
       display: flex;
-      justify-content: space-between;
-      align-items: center;
-      background: rgba(255,255,255,0.95);
-      padding: 20px 25px;
-      border-radius: 20px;
-      margin-bottom: 20px;
-      box-shadow: 0 6px 20px rgba(0,0,0,0.1);
       flex-wrap: wrap;
+      justify-content: center;
       gap: 15px;
     }
-    
-    .score { 
-      font-size: clamp(1.5rem, 4vw, 2rem);
-      font-weight: bold;
-      color: #27ae60;
+
+    #level-buttons button {
+      padding: 15px 25px;
+      background: linear-gradient(45deg, #ff6b6b, #ee5a52);
+      border: none;
+      color: #fff;
+      border-radius: 25px;
+      cursor: pointer;
+      font-size: clamp(0.9rem, 2.5vw, 1rem);
+      font-weight: 600;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(238, 90, 82, 0.4);
+      min-width: 140px;
     }
-    
-    .round-info {
-      font-size: clamp(1.3rem, 3.5vw, 1.8rem);
-      color: #34495e;
-      font-weight: bold;
+
+    #level-buttons button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(238, 90, 82, 0.6);
+      background: linear-gradient(45deg, #ee5a52, #ff6b6b);
     }
-    
-    .game-area { 
-      display: grid;
-      gap: 20px;
+
+    #level-buttons button:active {
+      transform: translateY(0);
+    }
+
+    /* Score */
+    .score {
+      font-size: clamp(1.1rem, 3vw, 1.4rem);
       margin: 20px 0;
-      flex-grow: 1;
-      justify-content: center;
+      color: #fff;
+      font-weight: 600;
+      background: rgba(255,255,255,0.1);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      padding: 12px 20px;
+      display: inline-block;
+      border: 1px solid rgba(255,255,255,0.2);
     }
-    
-    /* Grille adaptée selon le nombre d'options */
-    .game-area.choices-4 {
-      grid-template-columns: repeat(2, 1fr);
-      max-width: 600px;
-      margin: 20px auto;
+
+    /* Zone de jeu */
+    .game-area {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 15px;
+      margin: 25px 0;
+      padding: 0 10px;
     }
-    
-    .game-area.choices-6 {
-      grid-template-columns: repeat(2, 1fr);
-      max-width: 700px;
-      margin: 20px auto;
-    }
-    
-    .game-area.choices-8 {
-      grid-template-columns: repeat(2, 1fr);
-      max-width: 800px;
-      margin: 20px auto;
-    }
-    
+
+    /* Cartes des espèces */
     .item {
       background: rgba(255,255,255,0.95);
-      border: 4px solid transparent;
-      border-radius: 25px;
-      min-height: 200px;
+      backdrop-filter: blur(10px);
+      border: 2px solid rgba(255,255,255,0.3);
+      border-radius: 20px;
+      height: 180px;
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
       cursor: pointer;
-      transition: all 0.3s ease;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-      backdrop-filter: blur(10px);
-      padding: 20px;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+      padding: 15px;
       position: relative;
       overflow: hidden;
     }
-    
+
     .item::before {
       content: '';
       position: absolute;
       top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: linear-gradient(135deg, rgba(39,174,96,0.1), rgba(46,204,113,0.1));
-      opacity: 0;
-      transition: opacity 0.3s ease;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+      transition: left 0.5s;
     }
-    
-    .item:hover {
-      transform: translateY(-8px) scale(1.02);
-      border-color: #27ae60;
-      box-shadow: 0 20px 50px rgba(39,174,96,0.2);
-    }
-    
+
     .item:hover::before {
-      opacity: 1;
+      left: 100%;
     }
-    
-    .item img { 
-      width: 80%;
-      height: 120px;
+
+    .item:hover {
+      transform: translateY(-5px) scale(1.02);
+      box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+      border-color: #667eea;
+    }
+
+    .item img {
+      max-width: 90%;
+      max-height: 110px;
       object-fit: cover;
-      border-radius: 15px;
-      position: relative;
-      z-index: 1;
-      margin-bottom: 15px;
+      border-radius: 12px;
+      transition: transform 0.3s ease;
     }
-    
+
+    .item:hover img {
+      transform: scale(1.05);
+    }
+
     .item-name {
-      font-size: clamp(1rem, 2.5vw, 1.3rem);
-      font-weight: bold;
+      font-size: clamp(0.7rem, 2vw, 0.85rem);
+      font-weight: 600;
       color: #2c3e50;
+      margin-top: 8px;
       text-align: center;
-      line-height: 1.3;
-      position: relative;
-      z-index: 1;
+      line-height: 1.2;
     }
-    
-    .message { 
-      text-align: center;
-      font-weight: bold; 
-      font-size: clamp(1.3rem, 3.5vw, 1.8rem);
-      padding: 25px;
-      background: rgba(255,255,255,0.95);
-      border-radius: 20px;
-      margin: 20px 0;
-      box-shadow: 0 6px 20px rgba(0,0,0,0.1);
-      line-height: 1.4;
-    }
-    
-    .info {
-      background: rgba(255,255,255,0.95);
-      border-radius: 25px;
-      padding: 25px;
-      margin: 20px 0;
-      box-shadow: 0 10px 35px rgba(0,0,0,0.1);
+
+    /* Messages */
+    .message {
+      margin: 25px 0;
+      font-weight: 600;
+      font-size: clamp(1rem, 3vw, 1.3rem);
+      padding: 15px 20px;
+      border-radius: 15px;
+      background: rgba(255,255,255,0.1);
       backdrop-filter: blur(10px);
-      line-height: 1.6;
-      font-size: clamp(1rem, 2.5vw, 1.2rem);
+      border: 1px solid rgba(255,255,255,0.2);
+      color: #fff;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
     }
-    
+
+    /* Zone d'informations */
+    .info {
+      margin: 20px auto;
+      font-size: clamp(0.85rem, 2.2vw, 0.95rem);
+      text-align: left;
+      padding: 20px;
+      background: rgba(255,255,255,0.95);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255,255,255,0.3);
+      border-radius: 20px;
+      max-width: 700px;
+      line-height: 1.5;
+      white-space: pre-line;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    }
+
     .info img {
       width: 100%;
-      max-width: 250px;
-      height: 180px;
-      object-fit: cover;
-      border-radius: 20px;
-      margin: 0 auto 20px;
+      max-width: 300px;
+      border-radius: 15px;
+      margin-bottom: 15px;
       display: block;
-      box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+      margin-left: auto;
+      margin-right: auto;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.2);
     }
-    
-    .next-button {
-      background: linear-gradient(135deg, #3498db, #2980b9);
-      color: white;
-      border: none;
-      padding: 15px 30px;
-      border-radius: 25px;
-      font-size: clamp(1.1rem, 3vw, 1.4rem);
-      font-weight: bold;
-      cursor: pointer;
-      margin-top: 20px;
-      box-shadow: 0 6px 20px rgba(52,152,219,0.3);
-      transition: all 0.3s ease;
-    }
-    
-    .next-button:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 25px rgba(52,152,219,0.4);
-    }
-    
-    /* Mobile optimisé */
+
+    /* Responsive design */
     @media (max-width: 768px) {
-      .container { padding: 10px; }
+      body {
+        padding: 15px 10px;
+      }
       
-      .game-area.choices-4,
-      .game-area.choices-6,
-      .game-area.choices-8 {
-        grid-template-columns: 1fr;
-        max-width: 400px;
-        gap: 15px;
+      .game-area {
+        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+        gap: 12px;
+        padding: 0 5px;
       }
       
       .item {
-        min-height: 180px;
-        padding: 15px;
-      }
-      
-      .item img {
-        height: 100px;
-      }
-      
-      .game-info {
-        flex-direction: column;
-        text-align: center;
-        gap: 10px;
-        padding: 15px;
-      }
-      
-      header { 
-        padding: 15px; 
-        margin-bottom: 15px; 
-      }
-      
-      .info { 
-        padding: 20px; 
-        margin: 15px 0; 
-      }
-      
-      #level-buttons button {
-        padding: 18px 25px;
-        min-width: 100px;
-      }
-    }
-    
-    @media (max-width: 480px) {
-      .item {
-        min-height: 160px;
+        height: 160px;
         padding: 12px;
       }
       
       .item img {
-        height: 80px;
+        max-height: 90px;
       }
       
       #level-buttons {
@@ -299,53 +253,103 @@
       }
       
       #level-buttons button {
-        width: 200px;
+        width: 100%;
+        max-width: 280px;
       }
     }
-    
-    /* Animations */
+
+    @media (max-width: 480px) {
+      .game-area {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+      }
+      
+      .item {
+        height: 140px;
+        padding: 10px;
+      }
+      
+      .item img {
+        max-height: 75px;
+      }
+      
+      .info {
+        padding: 15px;
+        margin: 15px 10px;
+      }
+    }
+
+    /* Animations d'entrée */
     @keyframes fadeInUp {
-      from { 
-        opacity: 0; 
-        transform: translateY(30px); 
+      from {
+        opacity: 0;
+        transform: translateY(30px);
       }
-      to { 
-        opacity: 1; 
-        transform: translateY(0); 
+      to {
+        opacity: 1;
+        transform: translateY(0);
       }
     }
-    
-    .game-area .item {
+
+    .item {
       animation: fadeInUp 0.6s ease forwards;
     }
-    
-    .game-area .item:nth-child(1) { animation-delay: 0.1s; }
-    .game-area .item:nth-child(2) { animation-delay: 0.2s; }
-    .game-area .item:nth-child(3) { animation-delay: 0.3s; }
-    .game-area .item:nth-child(4) { animation-delay: 0.4s; }
-    .game-area .item:nth-child(5) { animation-delay: 0.5s; }
-    .game-area .item:nth-child(6) { animation-delay: 0.6s; }
-    .game-area .item:nth-child(7) { animation-delay: 0.7s; }
-    .game-area .item:nth-child(8) { animation-delay: 0.8s; }
+
+    .item:nth-child(2) { animation-delay: 0.1s; }
+    .item:nth-child(3) { animation-delay: 0.2s; }
+    .item:nth-child(4) { animation-delay: 0.3s; }
+    .item:nth-child(5) { animation-delay: 0.4s; }
+    .item:nth-child(6) { animation-delay: 0.5s; }
+    .item:nth-child(7) { animation-delay: 0.6s; }
+    .item:nth-child(8) { animation-delay: 0.7s; }
+
+    /* Style pour le message de succès/erreur */
+    .message.success {
+      background: linear-gradient(45deg, #4ecdc4, #44a08d);
+      color: white;
+      animation: pulse 0.6s ease;
+    }
+
+    .message.error {
+      background: linear-gradient(45deg, #ff6b6b, #ee5a52);
+      color: white;
+      animation: shake 0.6s ease;
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+      100% { transform: scale(1); }
+    }
+
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-5px); }
+      75% { transform: translateX(5px); }
+    }
+
+    /* Amélioration du contraste pour l'accessibilité */
+    @media (prefers-reduced-motion: reduce) {
+      * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
   </style>
 </head>
 <body>
   <div class="container">
-    <header>
-      <h1>⭐ Trouve l'intrus : Les Héros Invisibles ⭐</h1>
-      <p class="subtitle">Le but ? Démasquer l'espèce en danger pour mieux la protéger !</p>
-      <div id="level-buttons">
-        <button onclick="startGame('facile')">🟢 Facile</button>
-        <button onclick="startGame('moyen')">🟡 Moyen</button>
-        <button onclick="startGame('difficile')">🔴 Difficile</button>
-      </div>
-    </header>
-
-    <div class="game-info" id="gameInfo" style="display:none;">
-      <div class="score" id="scoreDisplay">Score : 0</div>
-      <div class="round-info" id="roundInfo">Manche 1/5</div>
+    <h1>⭐ Trouve l'intrus : Les Héros Invisibles ⭐</h1>
+    <p class="subtitle">Le but ? Démasquer l'espèce en danger pour mieux la protéger !</p>
+    
+    <div id="level-buttons">
+      <button onclick="startGame('facile')">🟢 Facile (4 choix)</button>
+      <button onclick="startGame('moyen')">🟡 Moyen (6 choix)</button>
+      <button onclick="startGame('difficile')">🔴 Difficile (8 choix)</button>
     </div>
-
+    
+    <div class="score" id="scoreDisplay" style="display:none;">Score : 0</div>
     <div class="game-area" id="gameArea"></div>
     <div class="message" id="message"></div>
     <div class="info" id="info"></div>
@@ -564,8 +568,6 @@ Très commun en ville, non insecte.`
     let usedEndangered = [];
 
     const scoreDisplay = document.getElementById('scoreDisplay');
-    const roundInfo = document.getElementById('roundInfo');
-    const gameInfo = document.getElementById('gameInfo');
     const infoDiv = document.getElementById('info');
     const levelButtons = document.getElementById('level-buttons');
     const messageDiv = document.getElementById('message');
@@ -591,12 +593,10 @@ Très commun en ville, non insecte.`
       
       totalRounds = gameConfig[level].rounds;
       
-      document.querySelector('header').style.display = 'none';
-      gameInfo.style.display = 'flex';
+      levelButtons.style.display = 'none';
+      scoreDisplay.style.display = 'block';
       updateScore();
-      updateRoundInfo();
       infoDiv.innerHTML = '';
-      messageDiv.innerHTML = '';
       
       showRound();
     }
@@ -604,8 +604,8 @@ Très commun en ville, non insecte.`
     // === AFFICHAGE D'UNE MANCHE ===
     function showRound() {
       infoDiv.innerHTML = '';
-      messageDiv.innerHTML = '';
-      updateRoundInfo();
+      messageDiv.textContent = `Manche ${currentRound + 1}/${totalRounds}`;
+      messageDiv.className = 'message';
       
       // Choisir un intrus qui n'a pas encore été utilisé
       const availableEndangered = endangeredSpecies.filter(species => !usedEndangered.includes(species));
@@ -626,8 +626,6 @@ Très commun en ville, non insecte.`
       
       // Afficher les cartes
       gameArea.innerHTML = '';
-      gameArea.className = `game-area choices-${nbChoices}`;
-      
       items.forEach((item, index) => {
         const div = document.createElement('div');
         div.className = 'item';
@@ -635,17 +633,17 @@ Très commun en ville, non insecte.`
         
         // Container pour l'image
         const imgContainer = document.createElement('div');
+        imgContainer.style.flex = '1';
         imgContainer.style.display = 'flex';
         imgContainer.style.alignItems = 'center';
         imgContainer.style.justifyContent = 'center';
-        imgContainer.style.height = '120px';
         
         // Image
         const img = document.createElement('img');
         img.src = getImagePath(item);
         img.alt = item;
         img.onerror = function() {
-          imgContainer.innerHTML = `<div style="text-align:center; font-size:1.2em; color:#666; padding:20px;">📷<br>Image<br>manquante</div>`;
+          imgContainer.innerHTML = `<div style="text-align:center; font-size:0.9em; color:#666;">📷<br>Image manquante</div>`;
         };
         imgContainer.appendChild(img);
         
@@ -673,18 +671,19 @@ Très commun en ville, non insecte.`
         correctStreak++;
         const bonus = 10 + correctStreak * 2; // 12, 14, 16...
         score += bonus;
-        messageDiv.innerHTML = `
-          <div style="font-size: 1.8em; margin-bottom: 15px;">✅ Bravo !</div>
-          <div style="margin-bottom: 15px;">Tu as protégé : <strong>${item}</strong></div>
-          <div style="color: #27ae60; font-size: 1.3em;">+${bonus} points</div>
-          <button class="next-button" onclick="nextRound()">
-            ➡️ Suite
-          </button>
-        `;
-        messageDiv.style.color = '#27ae60';
+        messageDiv.textContent = `✅ Bravo ! Espèce protégée : ${item} (+${bonus} pts)`;
+        messageDiv.className = 'message success';
         
         currentRound++;
         updateScore();
+        
+        setTimeout(() => {
+          if (currentRound < totalRounds) {
+            showRound();
+          } else {
+            finishGame();
+          }
+        }, 3000);
         
       } else {
         // Mauvaise réponse
@@ -692,26 +691,9 @@ Très commun en ville, non insecte.`
         wrongStreak++;
         const penalty = wrongStreak * 3;
         score = Math.max(0, score - penalty);
-        messageDiv.innerHTML = `
-          <div style="font-size: 1.6em; margin-bottom: 15px;">❌ Pas tout à fait !</div>
-          <div style="margin-bottom: 15px;"><strong>${item}</strong> n'est pas une espèce à protéger</div>
-          <div style="color: #e74c3c; font-size: 1.2em;">-${penalty} points</div>
-          <div style="font-size: 1em; margin-top: 10px; opacity: 0.8;">Essaie encore !</div>
-        `;
-        messageDiv.style.color = '#e74c3c';
+        messageDiv.textContent = `❌ ${item} n'est pas une espèce à protéger (-${penalty} pts)`;
+        messageDiv.className = 'message error';
         updateScore();
-      }
-      
-      // Scroll vers le message pour les enfants
-      messageDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    }
-
-    // === FONCTION POUR PASSER À LA MANCHE SUIVANTE ===
-    function nextRound() {
-      if (currentRound < totalRounds) {
-        showRound();
-      } else {
-        finishGame();
       }
     }
 
@@ -720,53 +702,28 @@ Très commun en ville, non insecte.`
       gameArea.innerHTML = '';
       
       let performance = '';
-      let emoji = '';
-      if (score >= totalRounds * 10) { performance = 'Excellent !'; emoji = '🏆'; }
-      else if (score >= totalRounds * 7) { performance = 'Très bien !'; emoji = '🥇'; }
-      else if (score >= totalRounds * 5) { performance = 'Bien !'; emoji = '🥈'; }
-      else { performance = 'À améliorer !'; emoji = '🥉'; }
+      if (score >= totalRounds * 10) performance = '🏆 Excellent !';
+      else if (score >= totalRounds * 7) performance = '🥇 Très bien !';
+      else if (score >= totalRounds * 5) performance = '🥈 Bien !';
+      else performance = '🥉 À améliorer !';
       
       messageDiv.innerHTML = `
-        <div style="font-size: 1.5em; margin-bottom: 15px;">${emoji} ${performance}</div>
-        <div style="font-size: 1.3em; margin-bottom: 10px;">Score final : <span style="color: #27ae60;">${score} points</span></div>
-        <div style="font-size: 1em; opacity: 0.8;">
-          Merci d'avoir joué pour la protection de la biodiversité ! 🌱
+        <div style="font-size: 1.4em; margin-bottom: 10px;">${performance}</div>
+        <div>Score final : ${score} points</div>
+        <div style="font-size: 0.9em; margin-top: 10px;">
+          Merci d'avoir joué pour la protection de la biodiversité !
         </div>
-        <button onclick="restartGame()" style="
-          margin-top: 20px;
-          padding: 12px 24px;
-          background: linear-gradient(135deg, #27ae60, #2ecc71);
-          border: none;
-          color: white;
-          border-radius: 25px;
-          cursor: pointer;
-          font-size: 1em;
-          font-weight: bold;
-          box-shadow: 0 4px 15px rgba(39,174,96,0.3);
-        ">🔄 Rejouer</button>
       `;
-      messageDiv.style.color = '#27ae60';
+      messageDiv.className = 'message success';
       
       infoDiv.innerHTML = '';
-    }
-
-    // === REDÉMARRAGE ===
-    function restartGame() {
-      document.querySelector('header').style.display = 'block';
-      gameInfo.style.display = 'none';
-      messageDiv.innerHTML = '';
-      infoDiv.innerHTML = '';
-      gameArea.innerHTML = '';
+      levelButtons.style.display = 'flex';
+      scoreDisplay.style.display = 'none';
     }
 
     // === MISE À JOUR DU SCORE ===
     function updateScore() {
       scoreDisplay.textContent = `Score : ${score}`;
-    }
-
-    // === MISE À JOUR DES INFOS DE MANCHE ===
-    function updateRoundInfo() {
-      roundInfo.textContent = `Manche ${currentRound + 1}/${totalRounds}`;
     }
   </script>
 </body>
