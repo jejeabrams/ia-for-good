@@ -10,224 +10,338 @@
     }
     
     body {
-      font-family: Arial, sans-serif;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       text-align: center;
-      background-color: #f8f9fa;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
       color: #2c3e50;
       padding: 15px;
       margin: 0;
       min-height: 100vh;
     }
     
-    h1 {
-      color: #27ae60;
-      font-size: 1.8rem;
-      margin-bottom: 15px;
-      line-height: 1.2;
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 20px;
+      padding: 25px;
+      box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+      backdrop-filter: blur(10px);
     }
     
-    p {
-      font-size: 1.1rem;
-      margin-bottom: 20px;
-      padding: 0 10px;
+    h1 {
+      background: linear-gradient(45deg, #27ae60, #2ecc71);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      font-size: 2rem;
+      margin-bottom: 15px;
+      line-height: 1.2;
+      font-weight: 700;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    
+    .subtitle {
+      font-size: 1.2rem;
+      margin-bottom: 25px;
+      color: #34495e;
+      font-weight: 500;
+      padding: 0 15px;
       line-height: 1.4;
     }
     
     #level-buttons {
-      margin: 20px 0;
+      margin: 25px 0;
       display: flex;
       flex-wrap: wrap;
       justify-content: center;
-      gap: 10px;
+      gap: 15px;
     }
     
     #level-buttons button {
-      padding: 12px 20px;
-      background-color: #27ae60;
+      padding: 15px 25px;
+      background: linear-gradient(45deg, #27ae60, #2ecc71);
       border: none;
-      color: #fff;
-      border-radius: 8px;
+      color: white;
+      border-radius: 15px;
       cursor: pointer;
       font-size: 1.1rem;
       font-weight: 600;
-      transition: all 0.2s ease;
-      min-width: 100px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      transition: all 0.3s ease;
+      min-width: 120px;
+      box-shadow: 0 5px 15px rgba(39, 174, 96, 0.3);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
     }
     
-    #level-buttons button:hover, #level-buttons button:active {
-      background-color: #1e8449;
-      transform: translateY(-2px);
-      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    #level-buttons button:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 25px rgba(39, 174, 96, 0.4);
+      background: linear-gradient(45deg, #2ecc71, #27ae60);
+    }
+    
+    #level-buttons button:active {
+      transform: translateY(-1px);
+    }
+    
+    .score-container {
+      margin: 20px 0;
+      display: none;
     }
     
     .score {
       font-size: 1.4rem;
-      margin: 15px 0;
       font-weight: bold;
-      padding: 10px;
-      background-color: #d1f2eb;
-      border-radius: 8px;
+      padding: 12px 25px;
+      background: linear-gradient(45deg, #3498db, #2980b9);
+      color: white;
+      border-radius: 25px;
       display: inline-block;
+      box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
       min-width: 150px;
     }
     
     .game-area {
       display: grid;
-      grid-template-columns: repeat(2, 1fr);
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
       gap: 15px;
-      max-width: 400px;
-      margin: 25px auto;
+      margin: 30px 0;
       padding: 0 10px;
     }
     
     .item {
-      background-color: #ecf0f1;
+      background: linear-gradient(145deg, #ffffff, #f8f9fa);
       border: 3px solid #27ae60;
-      border-radius: 12px;
-      min-height: 80px;
+      border-radius: 15px;
+      min-height: 100px;
       display: flex;
       justify-content: center;
       align-items: center;
       cursor: pointer;
       font-size: 1.1rem;
       font-weight: 600;
-      transition: all 0.2s ease;
+      transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
       padding: 15px;
       text-align: center;
       word-wrap: break-word;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-      line-height: 1.2;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+      line-height: 1.3;
+      color: #2c3e50;
+      position: relative;
+      overflow: hidden;
     }
     
-    .item:hover, .item:active {
-      transform: scale(1.05);
-      background-color: #d1f2eb;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    .item::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+      transition: left 0.5s;
+    }
+    
+    .item:hover::before {
+      left: 100%;
+    }
+    
+    .item:hover {
+      transform: translateY(-5px) scale(1.03);
+      box-shadow: 0 10px 25px rgba(39, 174, 96, 0.2);
+      border-color: #2ecc71;
     }
     
     .item:active {
-      transform: scale(0.98);
+      transform: translateY(-2px) scale(1.01);
     }
     
     .message {
       margin: 25px auto;
-      font-weight: bold;
+      font-weight: 600;
       font-size: 1.3rem;
-      padding: 15px;
-      border-radius: 8px;
-      min-height: 60px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      line-height: 1.3;
+      padding: 20px;
+      border-radius: 15px;
       max-width: 90%;
+      line-height: 1.4;
+      min-height: auto;
+      transition: all 0.3s ease;
+      opacity: 0;
+      transform: translateY(20px);
     }
     
-    .success {
-      background-color: #d4edda;
+    .message.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    
+    .message.success {
+      background: linear-gradient(135deg, #d4edda, #c3e6cb);
       color: #155724;
-      border: 2px solid #c3e6cb;
+      border: 2px solid #b8daff;
+      box-shadow: 0 5px 15px rgba(21, 87, 36, 0.1);
     }
     
-    .error {
-      background-color: #f8d7da;
+    .message.error {
+      background: linear-gradient(135deg, #f8d7da, #f5c6cb);
       color: #721c24;
-      border: 2px solid #f5c6cb;
+      border: 2px solid #f1b0b7;
+      box-shadow: 0 5px 15px rgba(114, 28, 36, 0.1);
     }
     
     .info {
-      margin: 20px auto;
+      margin: 25px auto;
       font-size: 1rem;
       text-align: left;
-      padding: 20px;
-      background-color: #d1f2eb;
+      padding: 25px;
+      background: linear-gradient(135deg, #e8f8f5, #d1f2eb);
       border: 2px solid #27ae60;
-      border-radius: 8px;
+      border-radius: 15px;
       max-width: 90%;
-      line-height: 1.5;
+      line-height: 1.6;
       white-space: pre-line;
+      box-shadow: 0 5px 15px rgba(39, 174, 96, 0.1);
+      display: none;
     }
     
-    /* Amélioration pour très petits écrans */
-    @media (max-width: 350px) {
-      .game-area {
-        grid-template-columns: 1fr;
-        max-width: 280px;
+    .info.show {
+      display: block;
+      animation: slideIn 0.5s ease;
+    }
+    
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
       }
-      
-      .item {
-        min-height: 70px;
-        font-size: 1rem;
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    .progress-bar {
+      width: 100%;
+      height: 6px;
+      background: #ecf0f1;
+      border-radius: 3px;
+      margin: 20px 0;
+      overflow: hidden;
+      display: none;
+    }
+    
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(45deg, #27ae60, #2ecc71);
+      width: 0%;
+      transition: width 0.5s ease;
+      border-radius: 3px;
+    }
+    
+    .game-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      margin: 20px 0;
+      gap: 15px;
+    }
+    
+    .level-indicator {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #34495e;
+      padding: 8px 15px;
+      background: #f8f9fa;
+      border-radius: 20px;
+      border: 2px solid #e9ecef;
+    }
+    
+    /* Responsive Design */
+    @media (max-width: 480px) {
+      .container {
+        margin: 10px;
+        padding: 20px;
+        border-radius: 15px;
       }
       
       h1 {
-        font-size: 1.6rem;
+        font-size: 1.7rem;
+      }
+      
+      .subtitle {
+        font-size: 1.1rem;
+      }
+      
+      .game-area {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+      }
+      
+      .item {
+        min-height: 80px;
+        font-size: 1rem;
+        padding: 12px;
       }
       
       #level-buttons button {
         font-size: 1rem;
-        padding: 10px 15px;
-        min-width: 80px;
+        padding: 12px 20px;
+        min-width: 100px;
+      }
+      
+      .game-header {
+        flex-direction: column;
+        text-align: center;
       }
     }
     
-    /* Amélioration pour écrans moyens */
-    @media (min-width: 500px) {
-      .game-area {
-        grid-template-columns: repeat(3, 1fr);
-        max-width: 600px;
-      }
-      
-      .item {
-        min-height: 90px;
-        font-size: 1.2rem;
-      }
-      
-      .info {
-        max-width: 600px;
-      }
-    }
-    
-    /* Amélioration pour tablettes */
     @media (min-width: 768px) {
       .game-area {
         grid-template-columns: repeat(4, 1fr);
-        max-width: 800px;
       }
       
       .item {
-        min-height: 100px;
-        font-size: 1.3rem;
+        min-height: 120px;
+        font-size: 1.2rem;
       }
       
       h1 {
-        font-size: 2.2rem;
+        font-size: 2.5rem;
       }
       
-      p {
+      .subtitle {
         font-size: 1.3rem;
-      }
-      
-      .info {
-        max-width: 700px;
-        font-size: 1.1rem;
       }
     }
   </style>
 </head>
 <body>
-  <h1>⭐ Trouve l'intrus : Les Héros Invisibles ⭐</h1>
-  <p>Le but ? Démasquer l'insecte en danger pour mieux le protéger !</p>
-  <div id="level-buttons">
-    <button onclick="startGame('facile')">Facile</button>
-    <button onclick="startGame('moyen')">Moyen</button>
-    <button onclick="startGame('difficile')">Difficile</button>
+  <div class="container">
+    <h1>⭐ Trouve l'intrus : Les Héros Invisibles ⭐</h1>
+    <p class="subtitle">Le but ? Démasquer l'insecte en danger pour mieux le protéger !</p>
+    
+    <div id="level-buttons">
+      <button onclick="startGame('facile')">🌱 Facile</button>
+      <button onclick="startGame('moyen')">🌿 Moyen</button>
+      <button onclick="startGame('difficile')">🌳 Difficile</button>
+    </div>
+    
+    <div class="game-header" id="gameHeader" style="display: none;">
+      <div class="level-indicator" id="levelIndicator"></div>
+      <div class="score-container">
+        <div class="score" id="scoreDisplay">Score: 0</div>
+      </div>
+    </div>
+    
+    <div class="progress-bar" id="progressBar">
+      <div class="progress-fill" id="progressFill"></div>
+    </div>
+    
+    <div class="game-area" id="gameArea"></div>
+    <div class="message" id="message"></div>
+    <div class="info" id="info"></div>
   </div>
-  <div class="score" id="scoreDisplay" style="display:none;">Score: 0</div>
-  <div class="game-area" id="gameArea"></div>
-  <div class="message" id="message"></div>
-  <div class="info" id="info"></div>
 
   <script>
     const commons = ["Mouche domestique","Fourmi","Papillon commun"];
@@ -274,30 +388,42 @@
       difficile: ["Serratella mesoleuca","Vanesse des pariétaires","Halictus carinthiacus","Phasme du palmiste rouge","Agrion bleuissant"]
     };
 
-    let score = 0, currentLevel = [], currentStep = 0;
+    let score = 0, currentLevel = [], currentStep = 0, currentLevelName = '';
     const scoreDisplay = document.getElementById('scoreDisplay');
     const infoDiv = document.getElementById('info');
     const levelButtons = document.getElementById('level-buttons');
+    const gameHeader = document.getElementById('gameHeader');
+    const levelIndicator = document.getElementById('levelIndicator');
+    const progressBar = document.getElementById('progressBar');
+    const progressFill = document.getElementById('progressFill');
 
     function startGame(level) {
       currentLevel = levels[level];
+      currentLevelName = level;
       currentStep = 0;
       score = 0;
+      
+      // Animation de transition
       levelButtons.style.display = 'none';
-      scoreDisplay.style.display = 'block';
+      gameHeader.style.display = 'flex';
+      progressBar.style.display = 'block';
+      
       updateScore();
-      infoDiv.textContent = '';
+      updateLevelIndicator();
+      updateProgress();
+      hideMessage();
+      hideInfo();
       showStep();
     }
 
     function showStep() {
-      infoDiv.textContent = '';
+      hideInfo();
+      hideMessage();
+      
       const intrus = currentLevel[currentStep];
       const items = shuffle([...commons, intrus]);
       const gameArea = document.getElementById('gameArea');
       gameArea.innerHTML = '';
-      document.getElementById('message').textContent = '';
-      document.getElementById('message').className = 'message';
 
       items.forEach(item => {
         const div = document.createElement('div');
@@ -306,6 +432,8 @@
         div.onclick = () => handleClick(item, intrus, div);
         gameArea.appendChild(div);
       });
+      
+      updateProgress();
     }
 
     function handleClick(item, intrus, div) {
@@ -313,19 +441,25 @@
       
       if (item === intrus) {
         score += 10;
-        msg.textContent = `✅ Bravo ! Intrus protégé : ${item}`;
-        msg.className = 'message success';
+        showMessage(`✅ Bravo ! Tu as sauvé : ${item}`, 'success');
         
         // Effet visuel sur le bon bouton
-        div.style.backgroundColor = '#d4edda';
+        div.style.background = 'linear-gradient(145deg, #d4edda, #c3e6cb)';
         div.style.borderColor = '#28a745';
+        div.style.transform = 'scale(1.05)';
         
         currentStep++;
         updateScore();
+        updateProgress();
         
         // Désactiver tous les boutons après une victoire
         const allItems = document.querySelectorAll('.item');
         allItems.forEach(btn => btn.style.pointerEvents = 'none');
+        
+        // Afficher les informations sur l'insecte
+        setTimeout(() => {
+          showInfo(descriptions[intrus]);
+        }, 800);
         
         setTimeout(() => {
           if (currentStep < currentLevel.length) {
@@ -333,29 +467,31 @@
           } else {
             finishGame();
           }
-        }, 1200);
+        }, 3000);
       } else {
         score = Math.max(0, score - 5);
-        msg.textContent = `❌ ${item} n'est pas une espèce à protéger.`;
-        msg.className = 'message error';
+        showMessage(`❌ ${item} n'est pas en danger !`, 'error');
         updateScore();
         
         // Effet visuel temporaire sur le bouton mal cliqué
-        const originalBg = div.style.backgroundColor;
+        const originalBg = div.style.background;
         const originalBorder = div.style.borderColor;
-        div.style.backgroundColor = "#f8d7da";
-        div.style.borderColor = "#dc3545";
+        const originalTransform = div.style.transform;
+        
+        div.style.background = 'linear-gradient(145deg, #f8d7da, #f5c6cb)';
+        div.style.borderColor = '#dc3545';
+        div.style.transform = 'scale(0.95)';
         
         // Remettre l'apparence normale après 1 seconde
         setTimeout(() => {
-          div.style.backgroundColor = originalBg || "#ecf0f1";
-          div.style.borderColor = originalBorder || "#27ae60";
+          div.style.background = originalBg;
+          div.style.borderColor = originalBorder || '#27ae60';
+          div.style.transform = originalTransform;
         }, 1000);
         
         // Effacer le message d'erreur après 2 secondes
         setTimeout(() => {
-          msg.textContent = "";
-          msg.className = "message";
+          hideMessage();
         }, 2000);
       }
     }
@@ -363,15 +499,72 @@
     function finishGame() {
       const gameArea = document.getElementById('gameArea');
       gameArea.innerHTML = '';
-      const msg = document.getElementById('message');
-      msg.textContent = `🎉 Félicitations ! Ton score final est ${score} points.`;
-      msg.className = 'message success';
-      infoDiv.textContent = '';
-      levelButtons.style.display = 'flex';
+      
+      let finalMessage = '';
+      if (score >= 40) {
+        finalMessage = `🏆 Incroyable ! Score parfait : ${score} points !`;
+      } else if (score >= 25) {
+        finalMessage = `🎉 Excellent ! Tu as sauvé beaucoup d'insectes : ${score} points !`;
+      } else {
+        finalMessage = `👍 Bien joué ! Continue d'apprendre : ${score} points !`;
+      }
+      
+      showMessage(finalMessage, 'success');
+      hideInfo();
+      
+      // Réinitialiser l'interface
+      setTimeout(() => {
+        gameHeader.style.display = 'none';
+        progressBar.style.display = 'none';
+        levelButtons.style.display = 'flex';
+        hideMessage();
+      }, 4000);
     }
 
     function updateScore() {
       scoreDisplay.textContent = `Score: ${score}`;
+    }
+    
+    function updateLevelIndicator() {
+      const levelNames = {
+        facile: '🌱 Niveau Facile',
+        moyen: '🌿 Niveau Moyen', 
+        difficile: '🌳 Niveau Difficile'
+      };
+      levelIndicator.textContent = levelNames[currentLevelName];
+    }
+    
+    function updateProgress() {
+      const progress = (currentStep / currentLevel.length) * 100;
+      progressFill.style.width = progress + '%';
+    }
+    
+    function showMessage(text, type) {
+      const msg = document.getElementById('message');
+      msg.textContent = text;
+      msg.className = `message ${type} show`;
+    }
+    
+    function hideMessage() {
+      const msg = document.getElementById('message');
+      msg.className = 'message';
+      setTimeout(() => {
+        msg.textContent = '';
+      }, 300);
+    }
+    
+    function showInfo(text) {
+      const info = document.getElementById('info');
+      info.textContent = text;
+      info.className = 'info show';
+    }
+    
+    function hideInfo() {
+      const info = document.getElementById('info');
+      info.className = 'info';
+      setTimeout(() => {
+        info.textContent = '';
+      }, 300);
     }
 
     function shuffle(arr) {
