@@ -3,6 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <title>Jeu : Trouve l'intrus - Les Héros Invisibles</title>
+  <!-- Configuration des images -->
+  <script src="imageConfig.js"></script>
   <style>
     /* Fond inspiré de la palette et ambiance Ciao Kombucha */
     body {
@@ -102,21 +104,8 @@
   <div class="message" id="message"></div>
   <div class="info" id="info"></div>
   <script>
-    // Mapping des noms d'espèces vers les fichiers images
-    const imageMapping = {
-      // Espèces menacées
-      "Mélibée": "Mélibée.jpg",
-      "Agrion bleuissant": "Agrion bleuissant (Ischnura elegans).jpg",
-      "Cordulie splendide": "Cordulie splendide (Somatochlora metallica).jpg",
-      "Serratella mesoleuca": "Serratella mesoleuca (Serratella mesoleuca).jpg",
-      "Vanesse des pariétaires": "Vanesse des pariétaires.jpg",
-      // Espèces communes (leurres)
-      "Mouche domestique": "Mouche.jpg",
-      "Fourmi": "Fourmi noire (Lasius niger).jpg",
-      "Papillon commun": "Papillon citron (Gonepteryx rhamni).jpg",
-      "Scarabée commun": "Scarabée commun (Geotrupes stercorarius or Scarabaeus sacer).jpg",
-      "Sauterelle verte": "Grillon champêtre (Gryllus campestris).jpg"
-    };
+    // Le mapping est maintenant dans imageConfig.js
+    // On utilise la variable globale imageConfig
 
     // Définitions type Wikipédia et gestes
     const definitions = {
@@ -201,7 +190,7 @@ Commun, non menacée.`
         
         // Image avec le bon nom de fichier
         const img = document.createElement('img');
-        img.src = `images/${imageMapping[item]}`;
+        img.src = getImagePath(item);
         img.alt = item;
         img.onerror = function() {
           // Fallback si l'image n'est pas trouvée - affiche juste le nom
@@ -224,7 +213,7 @@ Commun, non menacée.`
     function handleClick(item, intrus) {
       const msg = document.getElementById('message');
       // Image détaillée et définition
-      const detailImg = `<img src="images/${imageMapping[item]}" alt="${item}">`;
+      const detailImg = `<img src="${getImagePath(item)}" alt="${item}">`;
       infoDiv.innerHTML = detailImg + definitions[item];
       
       if (item === intrus) {
