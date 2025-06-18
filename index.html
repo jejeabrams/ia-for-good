@@ -193,10 +193,13 @@
       font-size: clamp(0.6rem, 1.8vw, 0.75rem);
       font-weight: 600;
       color: #2c3e50;
-      margin-top: clamp(2px, 0.5vh, 5px);
       text-align: center;
       line-height: 1.1;
       text-shadow: 1px 1px 2px rgba(255,255,255,0.8);
+      padding: 2px 4px;
+      background: rgba(255,255,255,0.8);
+      border-radius: 8px;
+      margin: 2px;
     }
 
     /* Messages */
@@ -260,11 +263,16 @@
       width: 100%;
       max-width: clamp(120px, 30vw, 200px);
       border-radius: 10px;
-      margin-bottom: 8px;
+      margin-bottom: 12px;
       display: block;
       margin-left: auto;
       margin-right: auto;
       box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+    }
+
+    .info-text {
+      color: #2c3e50;
+      font-weight: 500;
     }
 
     /* Messages de succès/erreur */
@@ -297,31 +305,80 @@
     /* Responsive spécifique mobile */
     @media (max-width: 768px) {
       .container {
-        padding: 5px;
+        padding: 8px;
+        gap: 5px;
       }
       
+      /* Force 2 colonnes pour 6 et 8 choix */
       .game-area.choices-6 {
         grid-template-columns: repeat(2, 1fr);
+        max-width: clamp(320px, 85vw, 500px);
+        gap: clamp(8px, 2vw, 15px);
       }
       
       .game-area.choices-8 {
         grid-template-columns: repeat(2, 1fr);
+        max-width: clamp(320px, 85vw, 500px);
+        gap: clamp(8px, 2vw, 15px);
+      }
+      
+      /* Cartes plus hautes sur mobile */
+      .item {
+        height: clamp(130px, 20vh, 170px);
+        padding: clamp(6px, 1.5vh, 10px);
+      }
+      
+      /* Texte plus lisible */
+      .item-name {
+        font-size: clamp(0.7rem, 2.2vw, 0.85rem);
+        line-height: 1.2;
+        padding: 4px 6px;
+      }
+      
+      /* Zone info plus compacte */
+      .info {
+        max-height: 30vh;
+        margin: 5px auto;
+        font-size: clamp(0.75rem, 2vw, 0.9rem);
+      }
+      
+      .info img {
+        max-width: clamp(100px, 25vw, 160px);
+        margin-bottom: 8px;
       }
     }
 
     @media (max-width: 480px) {
+      /* Même layout pour très petits écrans */
       .game-area.choices-8 {
         grid-template-columns: repeat(2, 1fr);
+        gap: clamp(6px, 1.5vw, 12px);
       }
       
       #level-buttons {
         flex-direction: column;
         align-items: center;
+        gap: 6px;
       }
       
       #level-buttons button {
         width: 90%;
-        max-width: 250px;
+        max-width: 280px;
+        padding: clamp(10px, 2.5vh, 14px) clamp(16px, 4vw, 24px);
+      }
+      
+      /* Messages plus compacts */
+      .message {
+        font-size: clamp(0.75rem, 2vw, 0.9rem);
+        padding: clamp(8px, 2vh, 12px);
+        margin: 5px auto;
+      }
+      
+      /* Bouton suivant plus petit */
+      .next-button {
+        padding: clamp(10px, 2vh, 14px) clamp(20px, 5vw, 28px);
+        font-size: clamp(0.75rem, 2vw, 0.9rem);
+        margin: 8px auto;
       }
     }
 
@@ -441,12 +498,12 @@
       "Abeille domestique",
       "Sauterelle verte",
       "Scarabée commun",
-      "Coccinelle à sept points",
+      "Coccinelle à sept point",
       "Termite des forêts",
       "Grillon champêtre",
       "Larve de coccinelle",
       "Cicadelle",
-      "Lucane cerf-volant",
+      "Lucane cerf volant",
       "Punaise verte",
       "Mite des vêtements",
       "Perce-oreille",
@@ -553,7 +610,7 @@ Commune partout, très adaptable.`,
 Coléoptère décomposeur, recycle la matière organique.
 Population stable, pas de menace particulière.`,
 
-      "Coccinelle à sept points": `🐞 **Coccinelle à sept points**
+      "Coccinelle à sept point": `🐞 **Coccinelle à sept point**
 Prédateur naturel des pucerons, auxiliaire du jardinier.
 Très commune, non menacée.`,
 
@@ -573,7 +630,7 @@ Abondante, non menacée.`,
 Petit insecte sauteur se nourrissant de sève.
 Très commune, non menacée.`,
 
-      "Lucane cerf-volant": `🪲 **Lucane cerf-volant**
+      "Lucane cerf volant": `🪲 **Lucane cerf volant**
 Grand coléoptère aux mandibules impressionnantes.
 Relativement commun, non menacé globalement.`,
 
@@ -640,8 +697,64 @@ Très commun en ville, non insecte.`
     }
 
     function getImagePath(speciesName) {
-      // Essayer d'abord avec .png, puis .jpg si ça ne marche pas
-      return `images/${encodeURIComponent(speciesName)}.png`;
+      // Mapping direct pour éviter les erreurs de normalisation
+      const imageMapping = {
+        // Espèces menacées
+        "Mélibée": "melibee.jpg",
+        "Vanesse des pariétaires": "vanesse-des-parietaires.jpg", 
+        "Agrion bleuissant": "agrion-bleuissant.jpg",
+        "Cordulie splendide": "cordulie-splendide.jpg",
+        "Serratella mesoleuca": "serratella-mesoleuca.jpg",
+        "Halictus carinthiacus": "halictus-carinthiacus.jpg",
+        "Bourdon velouté": "bourdon-veloute.jpg",
+        "Criquet de la Crau": "criquet-de-la-crau.jpg",
+        "Phasme du palmiste rouge": "phasme-du-palmiste-rouge.jpg",
+        "Dendrobias maxillosus": "dendrobias-maxillosus.jpg",
+        
+        // Espèces communes
+        "Chauve-souris frugivore": "chauve-souris-frugivore.jpg",
+        "Colibri": "colibri.jpg",
+        "Mouche domestique": "mouche-domestique.jpg",
+        "Fourmi noire": "fourmi-noire.jpg",
+        "Papillon commun": "papillon-commun.jpg",
+        "Abeille domestique": "abeille-domestique.jpg",
+        "Sauterelle verte": "sauterelle-verte.jpg",
+        "Scarabée commun": "scarabee-commun.jpg",
+        "Coccinelle à sept point": "coccinelle-a-sept-point.jpg",
+        "Termite des forêts": "termite-des-forets.jpg",
+        "Grillon champêtre": "grillon-champetre.jpg",
+        "Larve de coccinelle": "larve-de-coccinelle.jpg",
+        "Cicadelle": "cicadelle.jpg",
+        "Lucane cerf volant": "lucane-cerf-volant.jpg",
+        "Punaise verte": "punaise-verte.jpg",
+        "Mite des vêtements": "mite-des-vetements.jpg",
+        "Perce-oreille": "perce-oreille.jpg",
+        "Loup": "loup.jpg",
+        "Renard": "renard.jpg",
+        "Chat": "chat.jpg",
+        "Chien": "chien.jpg",
+        "Pigeon": "pigeon.jpg"
+      };
+      
+      // Retourner le nom de fichier exact ou un fallback
+      const fileName = imageMapping[speciesName];
+      if (fileName) {
+        return `images/${fileName}`;
+      }
+      
+      // Fallback avec normalisation si pas trouvé dans le mapping
+      const normalizedName = speciesName
+        .toLowerCase()
+        .replace(/\s+/g, '-')
+        .replace(/é/g, 'e')
+        .replace(/è/g, 'e')  
+        .replace(/à/g, 'a')
+        .replace(/ç/g, 'c')
+        .replace(/ô/g, 'o')
+        .replace(/'/g, '')
+        .replace(/[^a-z0-9\-]/g, '');
+      
+      return `images/${normalizedName}.jpg`;
     }
 
     // === DÉMARRAGE DU JEU ===
@@ -704,18 +817,29 @@ Très commun en ville, non insecte.`
         imgContainer.style.display = 'flex';
         imgContainer.style.alignItems = 'center';
         imgContainer.style.justifyContent = 'center';
+        imgContainer.style.height = '70%'; // Limiter la hauteur pour laisser place au nom
         
         // Image
         const img = document.createElement('img');
         img.src = getImagePath(item);
         img.alt = item;
         img.onerror = function() {
-          // Si .png ne marche pas, essayer .jpg
-          const fallbackSrc = `images/${encodeURIComponent(item)}.jpg`;
-          if (this.src !== fallbackSrc) {
-            this.src = fallbackSrc;
+          // Si .jpg ne marche pas, essayer .png
+          const normalizedName = item
+            .toLowerCase()
+            .replace(/\s+/g, '-')
+            .replace(/é/g, 'e')
+            .replace(/è/g, 'e')
+            .replace(/à/g, 'a')
+            .replace(/ç/g, 'c')
+            .replace(/ô/g, 'o')
+            .replace(/'/g, '')
+            .replace(/[^a-z0-9\-]/g, '');
+          const pngPath = `images/${normalizedName}.png`;
+          if (this.src !== pngPath) {
+            this.src = pngPath;
           } else {
-            // Si aucun des deux ne marche, afficher le placeholder
+            // Si aucun format ne marche, afficher le placeholder
             imgContainer.innerHTML = `<div style="text-align:center; font-size:0.8em; color:#666;">📷<br>Image manquante</div>`;
           }
         };
@@ -725,6 +849,10 @@ Très commun en ville, non insecte.`
         const nameDiv = document.createElement('div');
         nameDiv.className = 'item-name';
         nameDiv.textContent = item;
+        nameDiv.style.height = '30%'; // Hauteur fixe pour le nom
+        nameDiv.style.display = 'flex';
+        nameDiv.style.alignItems = 'center';
+        nameDiv.style.justifyContent = 'center';
         
         div.appendChild(imgContainer);
         div.appendChild(nameDiv);
@@ -749,7 +877,8 @@ Très commun en ville, non insecte.`
       
       // Afficher les informations sur l'espèce
       const detailImg = `<img src="${getImagePath(item)}" alt="${item}">`;
-      infoDiv.innerHTML = detailImg + definitions[item];
+      const textContent = `<div class="info-text">${definitions[item]}</div>`;
+      infoDiv.innerHTML = detailImg + textContent;
       
       if (item === intrus) {
         // Bonne réponse !
