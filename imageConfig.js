@@ -3,7 +3,7 @@
 
 const imageConfig = {
   // === ESPÈCES MENACÉES (les "intrus" à trouver) ===
-  "Mélibée": "Mélibée.jpg",
+  "Mélibée": "Melibée.jpg",
   
   "Agrion bleuissant": "Agrion bleuissant (Ischnura elegans).jpg",
   
