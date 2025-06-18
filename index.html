@@ -241,38 +241,40 @@
       background: linear-gradient(45deg, #FF7043, #FF9800);
     }
 
-    /* Zone d'informations - compacte */
+    /* Zone d'informations - bien visible sur mobile */
     .info {
-      margin: 8px auto 5px;
-      font-size: clamp(0.7rem, 1.8vw, 0.85rem);
+      margin: 15px auto 10px;
+      font-size: clamp(0.85rem, 2.2vw, 1rem);
       text-align: left;
-      padding: clamp(8px, 2vh, 12px);
-      background: rgba(255,255,255,0.9);
+      padding: clamp(12px, 3vh, 16px);
+      background: rgba(255,255,255,0.95);
       backdrop-filter: blur(8px);
-      border: 2px solid #4CAF50;
+      border: 3px solid #4CAF50;
       border-radius: 15px;
       max-width: 95%;
-      line-height: 1.3;
+      line-height: 1.4;
       white-space: pre-line;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-      max-height: 25vh;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+      min-height: 30vh;
+      max-height: 40vh;
       overflow-y: auto;
     }
 
     .info img {
       width: 100%;
-      max-width: clamp(120px, 30vw, 200px);
-      border-radius: 10px;
-      margin-bottom: 12px;
+      max-width: clamp(150px, 40vw, 250px);
+      border-radius: 12px;
+      margin-bottom: 15px;
       display: block;
       margin-left: auto;
       margin-right: auto;
-      box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+      box-shadow: 0 4px 15px rgba(0,0,0,0.25);
     }
 
     .info-text {
       color: #2c3e50;
-      font-weight: 500;
+      font-weight: 600;
+      font-size: clamp(0.9rem, 2.3vw, 1.1rem);
     }
 
     /* Messages de succès/erreur */
@@ -305,80 +307,53 @@
     /* Responsive spécifique mobile */
     @media (max-width: 768px) {
       .container {
-        padding: 8px;
-        gap: 5px;
+        padding: 5px;
       }
       
-      /* Force 2 colonnes pour 6 et 8 choix */
       .game-area.choices-6 {
         grid-template-columns: repeat(2, 1fr);
-        max-width: clamp(320px, 85vw, 500px);
-        gap: clamp(8px, 2vw, 15px);
       }
       
       .game-area.choices-8 {
         grid-template-columns: repeat(2, 1fr);
-        max-width: clamp(320px, 85vw, 500px);
-        gap: clamp(8px, 2vw, 15px);
       }
       
-      /* Cartes plus hautes sur mobile */
-      .item {
-        height: clamp(130px, 20vh, 170px);
-        padding: clamp(6px, 1.5vh, 10px);
-      }
-      
-      /* Texte plus lisible */
-      .item-name {
-        font-size: clamp(0.7rem, 2.2vw, 0.85rem);
-        line-height: 1.2;
-        padding: 4px 6px;
-      }
-      
-      /* Zone info plus compacte */
       .info {
-        max-height: 30vh;
-        margin: 5px auto;
-        font-size: clamp(0.75rem, 2vw, 0.9rem);
+        min-height: 35vh;
+        max-height: 45vh;
+        margin: 20px auto 15px;
+        font-size: clamp(0.9rem, 2.5vw, 1.1rem);
       }
       
-      .info img {
-        max-width: clamp(100px, 25vw, 160px);
-        margin-bottom: 8px;
+      .info-text {
+        font-size: clamp(0.95rem, 2.6vw, 1.15rem);
+        line-height: 1.5;
       }
     }
 
     @media (max-width: 480px) {
-      /* Même layout pour très petits écrans */
       .game-area.choices-8 {
         grid-template-columns: repeat(2, 1fr);
-        gap: clamp(6px, 1.5vw, 12px);
       }
       
       #level-buttons {
         flex-direction: column;
         align-items: center;
-        gap: 6px;
       }
       
       #level-buttons button {
         width: 90%;
-        max-width: 280px;
-        padding: clamp(10px, 2.5vh, 14px) clamp(16px, 4vw, 24px);
+        max-width: 250px;
       }
       
-      /* Messages plus compacts */
-      .message {
-        font-size: clamp(0.75rem, 2vw, 0.9rem);
-        padding: clamp(8px, 2vh, 12px);
-        margin: 5px auto;
+      .info {
+        min-height: 40vh;
+        max-height: 50vh;
+        margin: 25px auto 20px;
       }
       
-      /* Bouton suivant plus petit */
-      .next-button {
-        padding: clamp(10px, 2vh, 14px) clamp(20px, 5vw, 28px);
-        font-size: clamp(0.75rem, 2vw, 0.9rem);
-        margin: 8px auto;
+      .info-text {
+        font-size: clamp(1rem, 2.8vw, 1.2rem);
       }
     }
 
@@ -395,7 +370,8 @@
       }
       
       .info {
-        max-height: 20vh;
+        min-height: 25vh;
+        max-height: 35vh;
       }
     }
 
