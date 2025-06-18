@@ -38,7 +38,6 @@
       margin-bottom: 15px;
       line-height: 1.2;
       font-weight: 700;
-      text-shadow: 0 2px 4px rgba(0,0,0,0.1);
     }
     
     .subtitle {
@@ -80,10 +79,6 @@
       background: linear-gradient(45deg, #2ecc71, #27ae60);
     }
     
-    #level-buttons button:active {
-      transform: translateY(-1px);
-    }
-    
     .score-container {
       margin: 20px 0;
       display: none;
@@ -103,7 +98,7 @@
     
     .game-area {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
       gap: 15px;
       margin: 30px 0;
       padding: 0 10px;
@@ -113,12 +108,13 @@
       background: linear-gradient(145deg, #ffffff, #f8f9fa);
       border: 3px solid #27ae60;
       border-radius: 15px;
-      min-height: 100px;
+      min-height: 160px;
       display: flex;
+      flex-direction: column;
       justify-content: center;
       align-items: center;
       cursor: pointer;
-      font-size: 1.1rem;
+      font-size: 1rem;
       font-weight: 600;
       transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
       padding: 15px;
@@ -131,19 +127,20 @@
       overflow: hidden;
     }
     
-    .item::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: -100%;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
-      transition: left 0.5s;
+    .item img {
+      max-width: 80px;
+      max-height: 80px;
+      object-fit: cover;
+      border-radius: 8px;
+      margin-bottom: 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
     }
     
-    .item:hover::before {
-      left: 100%;
+    .item-name {
+      font-size: 0.9rem;
+      font-weight: 600;
+      text-align: center;
+      line-height: 1.2;
     }
     
     .item:hover {
@@ -164,7 +161,6 @@
       border-radius: 15px;
       max-width: 90%;
       line-height: 1.4;
-      min-height: auto;
       transition: all 0.3s ease;
       opacity: 0;
       transform: translateY(20px);
@@ -207,6 +203,15 @@
     .info.show {
       display: block;
       animation: slideIn 0.5s ease;
+    }
+    
+    .info img {
+      width: 100%;
+      max-width: 300px;
+      height: auto;
+      border-radius: 12px;
+      margin-bottom: 15px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
     }
     
     @keyframes slideIn {
@@ -279,9 +284,18 @@
       }
       
       .item {
-        min-height: 80px;
-        font-size: 1rem;
+        min-height: 140px;
+        font-size: 0.9rem;
         padding: 12px;
+      }
+      
+      .item img {
+        max-width: 60px;
+        max-height: 60px;
+      }
+      
+      .item-name {
+        font-size: 0.8rem;
       }
       
       #level-buttons button {
@@ -298,12 +312,16 @@
     
     @media (min-width: 768px) {
       .game-area {
-        grid-template-columns: repeat(4, 1fr);
+        grid-template-columns: repeat(3, 1fr);
       }
       
       .item {
-        min-height: 120px;
-        font-size: 1.2rem;
+        min-height: 180px;
+      }
+      
+      .item img {
+        max-width: 100px;
+        max-height: 100px;
       }
       
       h1 {
@@ -344,51 +362,74 @@
   </div>
 
   <script>
-    const commons = ["Mouche domestique","Fourmi","Papillon commun"];
-    const descriptions = {
-      "Mélibée": `🐛 **Mélibée** (en danger)
-- Habitat : Prairies humides de moyenne montagne.
-- Identifie-la : Ailes gris-brun, ocelles cerclés d'orange, 3 cm.
-- Enjeu : Pollinise le trèfle, base de la chaîne alimentaire.
-- Comment aider : Protège zones humides, plante des graminées locales.`,
-      "Agrion bleuissant": `💧 **Agrion bleuissant** (menacé)
-- Habitat : Ruisseaux peu profonds.
-- Look : Corps bleu et noir annelé, vole près de l'eau.
-- Enjeu : Chasseur de moustiques, indique eau propre.
-- Aide : Crée zones tampons, limite engrais chimiques.`,
-      "Cordulie splendide": `✨ **Cordulie splendide** (menacée)
-- Habitat : Zones méditerranéennes, mares.
-- Identifie-la : Corps métallique, yeux verts.
-- Rôle : Régule moustiques.
-- Aide : Préserve mares, stoppe pollution lumineuse.`,
-      "Serratella mesoleuca": `💦 **Serratella mesoleuca** (en voie de protection)
-- Habitat : Rivières courantes.
-- Identifie-la : Tronc d'éphémère 3‑35 mm, ailes délicates.
-- Rôle : Nourrit poissons, bio-indicateur.
-- Aide : Restaure berges, limite dragage.`,
-      "Vanesse des pariétaires": `🦋 **Vanesse des pariétaires** (menacée)
-- Habitat : Talus chauds, murs ensoleillés.
-- Identifie-la : Ailes fauves très découpées.
-- Rôle : Indique milieux secs.
-- Aide : Plante pariétaire, laisse pousser murs.`,
-      "Halictus carinthiacus": `🌸 **Halictus carinthiacus** (rare)
-- Habitat : Forêts, pâturages clairs.
-- Identifie-le : 6‑8 mm, ailes fumées.
-- Rôle : Pollinisation ciblée.
-- Aide : Crée abris au sol, plante fleurs sauvages.`,
-      "Phasme du palmiste rouge": `🌴 **Phasme du palmiste rouge** (endémique)
-- Habitat : Forêt de La Réunion.
-- Identifie-le : Corps vert-brun, sans ailes.
-- Rôle : Équilibre écosystème forestier.
-- Aide : Protège aires boisées primaires.`
-    };
-    const levels = {
-      facile: ["Mélibée","Agrion bleuissant","Cordulie splendide","Serratella mesoleuca","Vanesse des pariétaires"],
-      moyen: ["Halictus carinthiacus","Phasme du palmiste rouge","Mélibée","Agrion bleuissant","Cordulie splendide"],
-      difficile: ["Serratella mesoleuca","Vanesse des pariétaires","Halictus carinthiacus","Phasme du palmiste rouge","Agrion bleuissant"]
+    // Mapping exact des noms d'espèces aux fichiers d'images
+    const imageMapping = {
+      "Mélibée": "Melibée.jpg",
+      "Agrion bleuissant": "Agrion bleuissant (Ischnura elegans).jpg",
+      "Cordulie splendide": "Cordulie splendide (Somatochlora metallica).jpg",
+      "Serratella mesoleuca": "Serratella mesoleuca (Serratella mesoleuca).jpg",
+      "Vanesse des pariétaires": "Vanesse des pariétaires.jpg",
+      "Mouche domestique": "mouche .jpg",
+      "Fourmi": "Fourmi noire (Lasius niger).jpg",
+      "Papillon commun": "Papillon citron (Gonepteryx rhamni) .jpg",
+      "Scarabée commun": "Scarabée commun (Geotrupes stercorarius or Scarabaeus sacer).jpg",
+      "Sauterelle verte": "Grillon champêtre (Gryllus campestris).jpg"
     };
 
-    let score = 0, currentLevel = [], currentStep = 0, currentLevelName = '';
+    // Définitions type Wikipédia et gestes
+    const definitions = {
+      "Mélibée": `🐛 **Mélibée**
+1. Insecte sauvage des prairies humides montagneuses, ailes gris-brun ornées d'ocelles orangés.
+2. Pollinisateur essentiel du trèfle, base de la chaîne alimentaire locale.
+3. Menacé par la disparition des prairies humides et les monocultures.
+**Gestes** : Plante des graminées et fleurs sauvages, protège les zones humides près de chez toi.`,
+      "Agrion bleuissant": `💧 **Agrion bleuissant**
+1. Petite libellule aquatique au corps bleu et noir, larves vivant dans les ruisseaux clairs.
+2. Régulateur naturel des populations de moustiques, indicateur de qualité de l'eau.
+3. Menacé par l'assèchement des cours d'eau et la pollution agricole.
+**Gestes** : Crée un petit bassin sans pesticides, plante une bande tampon végétalisée.`,
+      "Cordulie splendide": `✨ **Cordulie splendide**
+1. Libellule au corps métallique vert, fréquente les mares méditerranéennes.
+2. Prédateur efficace des moustiques, grâce à son vol acrobatique.
+3. Menacée par la pollution lumineuse et la destruction des zones humides.
+**Gestes** : Installe des éclairages à spectre adapté, restaure et protège les mares locales.`,
+      "Serratella mesoleuca": `💦 **Serratella mesoleuca**
+1. Éphémère d'eau douce, nymphes aquatiques jusqu'à 3 ans avant leur vie brève de quelques heures.
+2. Nourrit essentiel pour poissons et oiseaux, bio-indicateur des rivières saines.
+3. Menacée par le dragage et l'artificialisation des berges.
+**Gestes** : Encourage la végétation naturelle des berges, limite les travaux lourds en rivière.`,
+      "Vanesse des pariétaires": `🦋 **Vanesse des pariétaires**
+1. Papillon fauve aux ailes très découpées, vivant sur les murs chauds où pousse la pariétaire.
+2. Chenille dépendante de la pariétaire officinale, illustrant l'importance des plantes-hôtes.
+3. Menacée par la bétonisation et le nettoyage des murs.
+**Gestes** : Laisse pousser la pariétaire sur un mur, évite les herbicides et nettoyages intempestifs.`,
+      // Décoys succincts
+      "Mouche domestique": `🪰 **Mouche domestique**
+Insecte ubiquitaire, recycle les déchets organiques.
+Non menacée, pas besoin de protection.`,
+      "Fourmi": `🐜 **Fourmi**
+Sociale, vit en colonies complexes, aère le sol.
+Espèce commune, non en danger.`,
+      "Papillon commun": `🦋 **Papillon commun (piéride)**
+Blanc fréquent dans les jardins, pollinise occasionnellement.
+Résilient, non menacé.`,
+      "Scarabée commun": `🪲 **Scarabée commun**
+Coléoptère détruisant la matière organique morte.
+Population stable, pas besoin de mesures spéciales.`,
+      "Sauterelle verte": `🦗 **Sauterelle verte**
+Sauteuse des prairies, herbivore modéré.
+Commun, non menacée.`
+    };
+
+    // Paramètres de jeu
+    const levels = {
+      facile: ["Mélibée","Agrion bleuissant","Cordulie splendide","Serratella mesoleuca","Vanesse des pariétaires"],
+      moyen: ["Agrion bleuissant","Cordulie splendide","Serratella mesoleuca","Vanesse des pariétaires","Mélibée"],
+      difficile: ["Cordulie splendide","Serratella mesoleuca","Vanesse des pariétaires","Mélibée","Agrion bleuissant"]
+    };
+    const decoys = ["Mouche domestique","Fourmi","Papillon commun","Scarabée commun","Sauterelle verte"];
+
+    let score = 0, correctStreak = 0, wrongStreak = 0, currentLevel = [], currentStep = 0, currentLevelName = '';
     const scoreDisplay = document.getElementById('scoreDisplay');
     const infoDiv = document.getElementById('info');
     const levelButtons = document.getElementById('level-buttons');
@@ -402,8 +443,9 @@
       currentLevelName = level;
       currentStep = 0;
       score = 0;
+      correctStreak = 0;
+      wrongStreak = 0;
       
-      // Animation de transition
       levelButtons.style.display = 'none';
       gameHeader.style.display = 'flex';
       progressBar.style.display = 'block';
@@ -421,14 +463,34 @@
       hideMessage();
       
       const intrus = currentLevel[currentStep];
-      const items = shuffle([...commons, intrus]);
+      const choices = shuffle([...decoys]).slice(0, 4);
+      const items = shuffle([...choices, intrus]);
       const gameArea = document.getElementById('gameArea');
       gameArea.innerHTML = '';
 
       items.forEach(item => {
         const div = document.createElement('div');
         div.className = 'item';
-        div.textContent = item;
+        
+        // Image
+        const img = document.createElement('img');
+        const imageName = imageMapping[item];
+        if (imageName) {
+          img.src = `images/${imageName}`;
+          img.alt = item;
+          img.onerror = function() {
+            // Si l'image ne charge pas, on met une icône par défaut
+            this.style.display = 'none';
+          };
+        }
+        
+        // Nom de l'espèce
+        const nameDiv = document.createElement('div');
+        nameDiv.className = 'item-name';
+        nameDiv.textContent = item;
+        
+        div.appendChild(img);
+        div.appendChild(nameDiv);
         div.onclick = () => handleClick(item, intrus, div);
         gameArea.appendChild(div);
       });
@@ -437,11 +499,21 @@
     }
 
     function handleClick(item, intrus, div) {
-      const msg = document.getElementById('message');
+      // Afficher l'image détaillée et la définition
+      const imageName = imageMapping[item];
+      let imageHtml = '';
+      if (imageName) {
+        imageHtml = `<img src="images/${imageName}" alt="${item}" style="width:100%;max-width:300px;border-radius:8px;margin-bottom:15px;">`;
+      }
+      infoDiv.innerHTML = imageHtml + definitions[item];
+      showInfo();
       
       if (item === intrus) {
-        score += 10;
-        showMessage(`✅ Bravo ! Tu as sauvé : ${item}`, 'success');
+        wrongStreak = 0;
+        correctStreak++;
+        const bonus = 4 + correctStreak; // 5,6,7...
+        score += bonus;
+        showMessage(`✅ Bravo ! Tu as sauvé : ${item} (+${bonus} pts)`, 'success');
         
         // Effet visuel sur le bon bouton
         div.style.background = 'linear-gradient(145deg, #d4edda, #c3e6cb)';
@@ -456,11 +528,6 @@
         const allItems = document.querySelectorAll('.item');
         allItems.forEach(btn => btn.style.pointerEvents = 'none');
         
-        // Afficher les informations sur l'insecte
-        setTimeout(() => {
-          showInfo(descriptions[intrus]);
-        }, 800);
-        
         setTimeout(() => {
           if (currentStep < currentLevel.length) {
             showStep();
@@ -469,8 +536,10 @@
           }
         }, 3000);
       } else {
-        score = Math.max(0, score - 5);
-        showMessage(`❌ ${item} n'est pas en danger !`, 'error');
+        correctStreak = 0;
+        wrongStreak++;
+        score = Math.max(0, score - wrongStreak);
+        showMessage(`❌ ${item} n'est pas en danger ! (−${wrongStreak} pts)`, 'error');
         updateScore();
         
         // Effet visuel temporaire sur le bouton mal cliqué
@@ -482,14 +551,12 @@
         div.style.borderColor = '#dc3545';
         div.style.transform = 'scale(0.95)';
         
-        // Remettre l'apparence normale après 1 seconde
         setTimeout(() => {
           div.style.background = originalBg;
           div.style.borderColor = originalBorder || '#27ae60';
           div.style.transform = originalTransform;
         }, 1000);
         
-        // Effacer le message d'erreur après 2 secondes
         setTimeout(() => {
           hideMessage();
         }, 2000);
@@ -512,7 +579,6 @@
       showMessage(finalMessage, 'success');
       hideInfo();
       
-      // Réinitialiser l'interface
       setTimeout(() => {
         gameHeader.style.display = 'none';
         progressBar.style.display = 'none';
@@ -555,7 +621,9 @@
     
     function showInfo(text) {
       const info = document.getElementById('info');
-      info.textContent = text;
+      if (text) {
+        info.innerHTML = text;
+      }
       info.className = 'info show';
     }
     
@@ -563,7 +631,7 @@
       const info = document.getElementById('info');
       info.className = 'info';
       setTimeout(() => {
-        info.textContent = '';
+        info.innerHTML = '';
       }, 300);
     }
 
