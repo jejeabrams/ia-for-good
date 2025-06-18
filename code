@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Jeu : Trouve l'intrus - Insectes en Danger</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      background-color: #f0fdf4;
+      color: #333;
+      padding: 20px;
+    }
+    h1 {
+      color: #1a8f5c;
+    }
+    .game-area {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 15px;
+      margin-top: 20px;
+    }
+    .item {
+      background-color: #ffffff;
+      border: 2px solid #1a8f5c;
+      border-radius: 8px;
+      width: 120px;
+      height: 120px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      font-size: 1.1em;
+      transition: transform 0.2s;
+    }
+    .item:hover {
+      transform: scale(1.05);
+      background-color: #d2f5e4;
+    }
+    .message {
+      margin-top: 20px;
+      font-weight: bold;
+      font-size: 1.2em;
+    }
+  </style>
+</head>
+<body>
+  <h1>⭐ Trouve l'intrus : Sauve les insectes !</h1>
+  <p>Parmi ces images, un seul n'est pas un insecte menacé. Clique sur l'intrus !</p>
+
+  <div class="game-area" id="gameArea"></div>
+  <div class="message" id="message"></div>
+
+  <script>
+    const items = [
+      "Abeille",
+      "Papillon",
+      "Coccinelle",
+      "Libellule",
+      "Drone",
+      "Sauterelle",
+      "Fourmi",
+      "Scarabée"
+    ];
+
+    const correctAnswer = "Drone";
+
+    function shuffle(array) {
+      return array.sort(() => Math.random() - 0.5);
+    }
+
+    function displayGame() {
+      const shuffled = shuffle([...items]);
+      const gameArea = document.getElementById("gameArea");
+      gameArea.innerHTML = "";
+      const message = document.getElementById("message");
+      message.textContent = "";
+
+      shuffled.forEach(item => {
+        const div = document.createElement("div");
+        div.className = "item";
+        div.textContent = item;
+        div.onclick = () => {
+          if (item === correctAnswer) {
+            message.textContent = "✅ Bien joué ! Le drone est l'intrus.";
+            message.style.color = "green";
+          } else {
+            message.textContent = "❌ Non, " + item + " est un insecte menacé.";
+            message.style.color = "red";
+          }
+        };
+        gameArea.appendChild(div);
+      });
+    }
+
+    displayGame();
+  </script>
+</body>
+</html>
