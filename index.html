@@ -2,574 +2,179 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Jeu : Trouve l'intrus - Les Héros Invisibles</title>
   <style>
-    * {
-      box-sizing: border-box;
-    }
-    
+    /* Fond inspiré de la palette et ambiance Ciao Kombucha */
     body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      font-family: Arial, sans-serif;
       text-align: center;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      color: #2c3e50;
-      padding: 15px;
-      margin: 0;
-      min-height: 100vh;
-    }
-    
-    .container {
-      max-width: 900px;
-      margin: 0 auto;
-      background: rgba(255, 255, 255, 0.95);
-      border-radius: 20px;
-      padding: 25px;
-      box-shadow: 0 15px 35px rgba(0,0,0,0.1);
-      backdrop-filter: blur(10px);
-    }
-    
-    h1 {
-      background: linear-gradient(45deg, #27ae60, #2ecc71);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      font-size: 2rem;
-      margin-bottom: 15px;
-      line-height: 1.2;
-      font-weight: 700;
-      text-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    }
-    
-    .subtitle {
-      font-size: 1.2rem;
-      margin-bottom: 25px;
-      color: #34495e;
-      font-weight: 500;
-      padding: 0 15px;
-      line-height: 1.4;
-    }
-    
-    #level-buttons {
-      margin: 25px 0;
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 15px;
-    }
-    
-    #level-buttons button {
-      padding: 15px 25px;
-      background: linear-gradient(45deg, #27ae60, #2ecc71);
-      border: none;
-      color: white;
-      border-radius: 15px;
-      cursor: pointer;
-      font-size: 1.1rem;
-      font-weight: 600;
-      transition: all 0.3s ease;
-      min-width: 120px;
-      box-shadow: 0 5px 15px rgba(39, 174, 96, 0.3);
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-    
-    #level-buttons button:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 8px 25px rgba(39, 174, 96, 0.4);
-      background: linear-gradient(45deg, #2ecc71, #27ae60);
-    }
-    
-    #level-buttons button:active {
-      transform: translateY(-1px);
-    }
-    
-    .score-container {
-      margin: 20px 0;
-      display: none;
-    }
-    
-    .score {
-      font-size: 1.4rem;
-      font-weight: bold;
-      padding: 12px 25px;
-      background: linear-gradient(45deg, #3498db, #2980b9);
-      color: white;
-      border-radius: 25px;
-      display: inline-block;
-      box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
-      min-width: 150px;
-    }
-    
-    .game-area {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-      gap: 15px;
-      margin: 30px 0;
-      padding: 0 10px;
-    }
-    
-    .item {
-      background: linear-gradient(145deg, #ffffff, #f8f9fa);
-      border: 3px solid #27ae60;
-      border-radius: 15px;
-      min-height: 100px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      cursor: pointer;
-      font-size: 1.1rem;
-      font-weight: 600;
-      transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-      padding: 15px;
-      text-align: center;
-      word-wrap: break-word;
-      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-      line-height: 1.3;
-      color: #2c3e50;
-      position: relative;
-      overflow: hidden;
-    }
-    
-    .item::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: -100%;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
-      transition: left 0.5s;
-    }
-    
-    .item:hover::before {
-      left: 100%;
-    }
-    
-    .item:hover {
-      transform: translateY(-5px) scale(1.03);
-      box-shadow: 0 10px 25px rgba(39, 174, 96, 0.2);
-      border-color: #2ecc71;
-    }
-    
-    .item:active {
-      transform: translateY(-2px) scale(1.01);
-    }
-    
-    .message {
-      margin: 25px auto;
-      font-weight: 600;
-      font-size: 1.3rem;
       padding: 20px;
-      border-radius: 15px;
-      max-width: 90%;
-      line-height: 1.4;
-      min-height: auto;
-      transition: all 0.3s ease;
-      opacity: 0;
-      transform: translateY(20px);
+      /* Image de fond et dégradé */
+      background: url('/mnt/data/A_photograph_captures_a_sunlit_meadow_in_full_bloo.png') center/cover no-repeat, linear-gradient(to top, #80c241 0%, #dff5e5 50%, #a3e3f5 100%);
+      color: #2c3e50;
     }
-    
-    .message.show {
-      opacity: 1;
-      transform: translateY(0);
+    h1 { color: #27ae60; }
+    #level-buttons { margin: 20px 0; }
+    #level-buttons button {
+      margin: 5px;
+      padding: 12px 20px;
+      background-color: #27ae60;
+      border: none;
+      color: #fff;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 1em;
+      transition: background-color 0.2s;
     }
-    
-    .message.success {
-      background: linear-gradient(135deg, #d4edda, #c3e6cb);
-      color: #155724;
-      border: 2px solid #b8daff;
-      box-shadow: 0 5px 15px rgba(21, 87, 36, 0.1);
-    }
-    
-    .message.error {
-      background: linear-gradient(135deg, #f8d7da, #f5c6cb);
-      color: #721c24;
-      border: 2px solid #f1b0b7;
-      box-shadow: 0 5px 15px rgba(114, 28, 36, 0.1);
-    }
-    
-    .info {
-      margin: 25px auto;
-      font-size: 1rem;
-      text-align: left;
-      padding: 25px;
-      background: linear-gradient(135deg, #e8f8f5, #d1f2eb);
+    #level-buttons button:hover { background-color: #1e884a; }
+    .score { font-size: 1.4em; margin-top: 12px; }
+    .game-area { display: flex; flex-wrap: wrap; justify-content: center; gap: 16px; margin-top: 25px; }
+    .item {
+      background-color: rgba(255,255,255,0.8);
       border: 2px solid #27ae60;
-      border-radius: 15px;
-      max-width: 90%;
-      line-height: 1.6;
-      white-space: pre-line;
-      box-shadow: 0 5px 15px rgba(39, 174, 96, 0.1);
-      display: none;
-    }
-    
-    .info.show {
-      display: block;
-      animation: slideIn 0.5s ease;
-    }
-    
-    @keyframes slideIn {
-      from {
-        opacity: 0;
-        transform: translateY(30px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-    
-    .progress-bar {
-      width: 100%;
-      height: 6px;
-      background: #ecf0f1;
-      border-radius: 3px;
-      margin: 20px 0;
-      overflow: hidden;
-      display: none;
-    }
-    
-    .progress-fill {
-      height: 100%;
-      background: linear-gradient(45deg, #27ae60, #2ecc71);
-      width: 0%;
-      transition: width 0.5s ease;
-      border-radius: 3px;
-    }
-    
-    .game-header {
+      border-radius: 12px;
+      width: 140px;
+      height: 140px;
       display: flex;
-      justify-content: space-between;
+      justify-content: center;
       align-items: center;
-      flex-wrap: wrap;
-      margin: 20px 0;
-      gap: 15px;
+      cursor: pointer;
+      font-size: 0.9em;
+      transition: transform 0.2s, background-color 0.2s;
+      padding: 10px;
+      box-sizing: border-box;
+      text-align: center;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
     }
-    
-    .level-indicator {
-      font-size: 1.1rem;
-      font-weight: 600;
-      color: #34495e;
-      padding: 8px 15px;
-      background: #f8f9fa;
-      border-radius: 20px;
-      border: 2px solid #e9ecef;
-    }
-    
-    /* Responsive Design */
-    @media (max-width: 480px) {
-      .container {
-        margin: 10px;
-        padding: 20px;
-        border-radius: 15px;
-      }
-      
-      h1 {
-        font-size: 1.7rem;
-      }
-      
-      .subtitle {
-        font-size: 1.1rem;
-      }
-      
-      .game-area {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 12px;
-      }
-      
-      .item {
-        min-height: 80px;
-        font-size: 1rem;
-        padding: 12px;
-      }
-      
-      #level-buttons button {
-        font-size: 1rem;
-        padding: 12px 20px;
-        min-width: 100px;
-      }
-      
-      .game-header {
-        flex-direction: column;
-        text-align: center;
-      }
-    }
-    
-    @media (min-width: 768px) {
-      .game-area {
-        grid-template-columns: repeat(4, 1fr);
-      }
-      
-      .item {
-        min-height: 120px;
-        font-size: 1.2rem;
-      }
-      
-      h1 {
-        font-size: 2.5rem;
-      }
-      
-      .subtitle {
-        font-size: 1.3rem;
-      }
+    .item:hover { transform: scale(1.05); background-color: rgba(255,255,255,1); }
+    .message { margin-top: 22px; font-weight: bold; font-size: 1.2em; }
+    .info {
+      margin-top: 14px;
+      font-size: 0.95em;
+      text-align: left;
+      padding: 18px;
+      background-color: rgba(255,255,255,0.9);
+      border: 1px solid #27ae60;
+      border-radius: 8px;
+      max-width: 680px;
+      margin: 14px auto;
+      line-height: 1.4;
+      white-space: pre-line;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.05);
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h1>⭐ Trouve l'intrus : Les Héros Invisibles ⭐</h1>
-    <p class="subtitle">Le but ? Démasquer l'insecte en danger pour mieux le protéger !</p>
-    
-    <div id="level-buttons">
-      <button onclick="startGame('facile')">🌱 Facile</button>
-      <button onclick="startGame('moyen')">🌿 Moyen</button>
-      <button onclick="startGame('difficile')">🌳 Difficile</button>
-    </div>
-    
-    <div class="game-header" id="gameHeader" style="display: none;">
-      <div class="level-indicator" id="levelIndicator"></div>
-      <div class="score-container">
-        <div class="score" id="scoreDisplay">Score: 0</div>
-      </div>
-    </div>
-    
-    <div class="progress-bar" id="progressBar">
-      <div class="progress-fill" id="progressFill"></div>
-    </div>
-    
-    <div class="game-area" id="gameArea"></div>
-    <div class="message" id="message"></div>
-    <div class="info" id="info"></div>
+  <h1>⭐ Trouve l'intrus : Les Héros Invisibles ⭐</h1>
+  <p>Le but ? Démasquer l'insecte en danger pour mieux le protéger !</p>
+  <div id="level-buttons">
+    <button onclick="startGame('facile')">Facile</button>
+    <button onclick="startGame('moyen')">Moyen</button>
+    <button onclick="startGame('difficile')">Difficile</button>
   </div>
+  <div class="score" id="scoreDisplay" style="display:none;">Score : 0</div>
+  <div class="game-area" id="gameArea"></div>
+  <div class="message" id="message"></div>
+  <div class="info" id="info"></div>
 
   <script>
-    const commons = ["Mouche domestique","Fourmi","Papillon commun"];
-    const descriptions = {
-      "Mélibée": `🐛 **Mélibée** (en danger)
-- Habitat : Prairies humides de moyenne montagne.
-- Identifie-la : Ailes gris-brun, ocelles cerclés d'orange, 3 cm.
-- Enjeu : Pollinise le trèfle, base de la chaîne alimentaire.
-- Comment aider : Protège zones humides, plante des graminées locales.`,
-      "Agrion bleuissant": `💧 **Agrion bleuissant** (menacé)
-- Habitat : Ruisseaux peu profonds.
-- Look : Corps bleu et noir annelé, vole près de l'eau.
-- Enjeu : Chasseur de moustiques, indique eau propre.
-- Aide : Crée zones tampons, limite engrais chimiques.`,
-      "Cordulie splendide": `✨ **Cordulie splendide** (menacée)
-- Habitat : Zones méditerranéennes, mares.
-- Identifie-la : Corps métallique, yeux verts.
-- Rôle : Régule moustiques.
-- Aide : Préserve mares, stoppe pollution lumineuse.`,
-      "Serratella mesoleuca": `💦 **Serratella mesoleuca** (en voie de protection)
-- Habitat : Rivières courantes.
-- Identifie-la : Tronc d'éphémère 3‑35 mm, ailes délicates.
-- Rôle : Nourrit poissons, bio-indicateur.
-- Aide : Restaure berges, limite dragage.`,
-      "Vanesse des pariétaires": `🦋 **Vanesse des pariétaires** (menacée)
-- Habitat : Talus chauds, murs ensoleillés.
-- Identifie-la : Ailes fauves très découpées.
-- Rôle : Indique milieux secs.
-- Aide : Plante pariétaire, laisse pousser murs.`,
-      "Halictus carinthiacus": `🌸 **Halictus carinthiacus** (rare)
-- Habitat : Forêts, pâturages clairs.
-- Identifie-le : 6‑8 mm, ailes fumées.
-- Rôle : Pollinisation ciblée.
-- Aide : Crée abris au sol, plante fleurs sauvages.`,
-      "Phasme du palmiste rouge": `🌴 **Phasme du palmiste rouge** (endémique)
-- Habitat : Forêt de La Réunion.
-- Identifie-le : Corps vert-brun, sans ailes.
-- Rôle : Équilibre écosystème forestier.
-- Aide : Protège aires boisées primaires.`
-    };
-    const levels = {
-      facile: ["Mélibée","Agrion bleuissant","Cordulie splendide","Serratella mesoleuca","Vanesse des pariétaires"],
-      moyen: ["Halictus carinthiacus","Phasme du palmiste rouge","Mélibée","Agrion bleuissant","Cordulie splendide"],
-      difficile: ["Serratella mesoleuca","Vanesse des pariétaires","Halictus carinthiacus","Phasme du palmiste rouge","Agrion bleuissant"]
+    // Définitions type Wikipédia
+    const definitions = {
+      "Mélibée": `🐛 **Mélibée**
+1. Insecte sauvage des prairies humides montagneuses, ailes gris-brun ornées d’ocelles orangés.
+2. Pollinisateur essentiel du trèfle, base de la chaîne alimentaire locale.
+3. Menacé par la disparition des prairies humides et les monocultures.
+**Gestes** : Plante des graminées et fleurs sauvages, protège les zones humides près de chez toi.`,
+      "Agrion bleuissant": `💧 **Agrion bleuissant**
+1. Petite libellule aquatique au corps bleu et noir, larves vivant dans les ruisseaux clairs.
+2. Régulateur naturel des populations de moustiques, indicateur de qualité de l’eau.
+3. Menacé par l’assèchement des cours d’eau et la pollution agricole.
+**Gestes** : Crée un petit bassin sans pesticides, plante une bande tampon végétalisée.`,
+      "Cordulie splendide": `✨ **Cordulie splendide**
+1. Libellule au corps métallique vert, fréquente les mares méditerranéennes.
+2. Prédateur efficace des moustiques, grâce à son vol acrobatique.
+3. Menacée par la pollution lumineuse et la destruction des zones humides.
+**Gestes** : Installe des éclairages à spectre adapté, restaure et protège les mares locales.`,
+      "Serratella mesoleuca": `💦 **Serratella mesoleuca**
+1. Éphémère d’eau douce, nymphes aquatiques jusqu’à 3 ans avant leur vie brève de quelques heures.
+2. Nourrit essentiel pour poissons et oiseaux, bio-indicateur des rivières saines.
+3. Menacée par le dragage et l’artificialisation des berges.
+**Gestes** : Encourage la végétation naturelle des berges, limite les travaux lourds en rivière.`,
+      "Vanesse des pariétaires": `🦋 **Vanesse des pariétaires**
+1. Papillon fauve aux ailes très découpées, vivant sur les murs chauds où pousse la pariétaire.
+2. Chenille dépendante de la pariétaire officinale, illustrant l’importance des plantes-hôtes.
+3. Menacée par la bétonisation et le nettoyage des murs.
+**Gestes** : Laisse pousser la pariétaire sur un mur, évite les herbicides et nettoyages intempestifs.`,
+      // Décoys succincts
+      "Mouche domestique": `🐜 **Mouche domestique**
+Insecte ubiquitaire, recycle les déchets organiques.
+Non menacée, pas besoin de protection.`,
+      "Fourmi": `🐜 **Fourmi**
+Sociale, vit en colonies complexes, aère le sol.
+Espèce commune, non en danger.`,
+      "Papillon commun": `🦋 **Papillon commun (piéride)**
+Blanc fréquent dans les jardins, pollinise occasionnellement.
+Résilient, non menacé.`,
+      "Scarabée commun": `🐞 **Scarabée commun**
+Coléoptère détruisant la matière organique morte.
+Population stable, pas besoin de mesures spéciales.`,
+      "Sauterelle verte": `🦗 **Sauterelle verte**
+Sauteuse des prairies, herbivore modéré.
+Commun, non menacée.`
     };
 
-    let score = 0, currentLevel = [], currentStep = 0, currentLevelName = '';
+    // Liste des intrus par niveau
+    const levels = {
+      facile: ["Mélibée","Agrion bleuissant","Cordulie splendide","Serratella mesoleuca","Vanesse des pariétaires"],
+      moyen: ["Agrion bleuissant","Cordulie splendide","Serratella mesoleuca","Vanesse des pariétaires","Mélibée"],
+      difficile: ["Cordulie splendide","Serratella mesoleuca","Vanesse des pariétaires","Mélibée","Agrion bleuissant"]
+    };
+    const decoys = ["Mouche domestique","Fourmi","Papillon commun","Scarabée commun","Sauterelle verte"];
+
+    let score = 0, currentLevel = [], currentStep = 0;
     const scoreDisplay = document.getElementById('scoreDisplay');
     const infoDiv = document.getElementById('info');
     const levelButtons = document.getElementById('level-buttons');
-    const gameHeader = document.getElementById('gameHeader');
-    const levelIndicator = document.getElementById('levelIndicator');
-    const progressBar = document.getElementById('progressBar');
-    const progressFill = document.getElementById('progressFill');
 
     function startGame(level) {
-      currentLevel = levels[level];
-      currentLevelName = level;
-      currentStep = 0;
-      score = 0;
-      
-      // Animation de transition
-      levelButtons.style.display = 'none';
-      gameHeader.style.display = 'flex';
-      progressBar.style.display = 'block';
-      
-      updateScore();
-      updateLevelIndicator();
-      updateProgress();
-      hideMessage();
-      hideInfo();
+      currentLevel = levels[level]; currentStep = 0; score = 0;
+      levelButtons.style.display = 'none'; scoreDisplay.style.display = 'block'; updateScore(); infoDiv.textContent = '';
       showStep();
     }
 
     function showStep() {
-      hideInfo();
-      hideMessage();
-      
+      infoDiv.textContent = ''; document.getElementById('message').textContent = '';
       const intrus = currentLevel[currentStep];
-      const items = shuffle([...commons, intrus]);
-      const gameArea = document.getElementById('gameArea');
-      gameArea.innerHTML = '';
-
+      const choices = shuffle(decoys.slice()).slice(0,4);
+      const items = shuffle([...choices, intrus]);
+      const gameArea = document.getElementById('gameArea'); gameArea.innerHTML = '';
       items.forEach(item => {
-        const div = document.createElement('div');
-        div.className = 'item';
-        div.textContent = item;
-        div.onclick = () => handleClick(item, intrus, div);
-        gameArea.appendChild(div);
+        const div = document.createElement('div'); div.className='item'; div.textContent=item;
+        div.onclick = () => handleClick(item, intrus); gameArea.appendChild(div);
       });
-      
-      updateProgress();
     }
 
-    function handleClick(item, intrus, div) {
-      const msg = document.getElementById('message');
-      
+    function handleClick(item, intrus) {
+      const msg = document.getElementById('message'); infoDiv.innerHTML = definitions[item] || '';
       if (item === intrus) {
-        score += 10;
-        showMessage(`✅ Bravo ! Tu as sauvé : ${item}`, 'success');
-        
-        // Effet visuel sur le bon bouton
-        div.style.background = 'linear-gradient(145deg, #d4edda, #c3e6cb)';
-        div.style.borderColor = '#28a745';
-        div.style.transform = 'scale(1.05)';
-        
-        currentStep++;
-        updateScore();
-        updateProgress();
-        
-        // Désactiver tous les boutons après une victoire
-        const allItems = document.querySelectorAll('.item');
-        allItems.forEach(btn => btn.style.pointerEvents = 'none');
-        
-        // Afficher les informations sur l'insecte
-        setTimeout(() => {
-          showInfo(descriptions[intrus]);
-        }, 800);
-        
-        setTimeout(() => {
-          if (currentStep < currentLevel.length) {
-            showStep();
-          } else {
-            finishGame();
-          }
-        }, 3000);
+        score += 10; msg.textContent = `✅ Bravo ! Intrus protégé : ${item}`; msg.style.color = '#27ae60'; currentStep++; updateScore();
+        setTimeout(() => { if (currentStep < currentLevel.length) showStep(); else finishGame(); }, 1000);
       } else {
-        score = Math.max(0, score - 5);
-        showMessage(`❌ ${item} n'est pas en danger !`, 'error');
-        updateScore();
-        
-        // Effet visuel temporaire sur le bouton mal cliqué
-        const originalBg = div.style.background;
-        const originalBorder = div.style.borderColor;
-        const originalTransform = div.style.transform;
-        
-        div.style.background = 'linear-gradient(145deg, #f8d7da, #f5c6cb)';
-        div.style.borderColor = '#dc3545';
-        div.style.transform = 'scale(0.95)';
-        
-        // Remettre l'apparence normale après 1 seconde
-        setTimeout(() => {
-          div.style.background = originalBg;
-          div.style.borderColor = originalBorder || '#27ae60';
-          div.style.transform = originalTransform;
-        }, 1000);
-        
-        // Effacer le message d'erreur après 2 secondes
-        setTimeout(() => {
-          hideMessage();
-        }, 2000);
+        score = Math.max(0, score - 1); msg.textContent = `❌ ${item} n'est pas une espèce à protéger.`; msg.style.color = '#c0392b'; updateScore();
       }
     }
 
     function finishGame() {
-      const gameArea = document.getElementById('gameArea');
-      gameArea.innerHTML = '';
-      
-      let finalMessage = '';
-      if (score >= 40) {
-        finalMessage = `🏆 Incroyable ! Score parfait : ${score} points !`;
-      } else if (score >= 25) {
-        finalMessage = `🎉 Excellent ! Tu as sauvé beaucoup d'insectes : ${score} points !`;
-      } else {
-        finalMessage = `👍 Bien joué ! Continue d'apprendre : ${score} points !`;
-      }
-      
-      showMessage(finalMessage, 'success');
-      hideInfo();
-      
-      // Réinitialiser l'interface
-      setTimeout(() => {
-        gameHeader.style.display = 'none';
-        progressBar.style.display = 'none';
-        levelButtons.style.display = 'flex';
-        hideMessage();
-      }, 4000);
+      document.getElementById('gameArea').innerHTML = '';
+      document.getElementById('message').textContent = `🎉 Bravo ! Ton score final est ${score} points.`;
+      infoDiv.textContent = ''; levelButtons.style.display = 'block';
     }
 
-    function updateScore() {
-      scoreDisplay.textContent = `Score: ${score}`;
-    }
-    
-    function updateLevelIndicator() {
-      const levelNames = {
-        facile: '🌱 Niveau Facile',
-        moyen: '🌿 Niveau Moyen', 
-        difficile: '🌳 Niveau Difficile'
-      };
-      levelIndicator.textContent = levelNames[currentLevelName];
-    }
-    
-    function updateProgress() {
-      const progress = (currentStep / currentLevel.length) * 100;
-      progressFill.style.width = progress + '%';
-    }
-    
-    function showMessage(text, type) {
-      const msg = document.getElementById('message');
-      msg.textContent = text;
-      msg.className = `message ${type} show`;
-    }
-    
-    function hideMessage() {
-      const msg = document.getElementById('message');
-      msg.className = 'message';
-      setTimeout(() => {
-        msg.textContent = '';
-      }, 300);
-    }
-    
-    function showInfo(text) {
-      const info = document.getElementById('info');
-      info.textContent = text;
-      info.className = 'info show';
-    }
-    
-    function hideInfo() {
-      const info = document.getElementById('info');
-      info.className = 'info';
-      setTimeout(() => {
-        info.textContent = '';
-      }, 300);
-    }
-
-    function shuffle(arr) {
-      return arr.sort(() => Math.random() - 0.5);
-    }
+    function updateScore() { scoreDisplay.textContent = `Score : ${score}`; }
+    function shuffle(arr) { return arr.sort(() => Math.random() - 0.5); }
   </script>
 </body>
 </html>
+
+
+
