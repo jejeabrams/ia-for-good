@@ -34,14 +34,15 @@
       border: 2px solid #27ae60;
       border-radius: 12px;
       width: 140px;
-      height: 140px;
+      height: 160px;
       display: flex;
+      flex-direction: column;
       justify-content: center;
       align-items: center;
       cursor: pointer;
       transition: transform 0.2s, background-color 0.2s;
       box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-      padding: 5px;
+      padding: 8px;
       box-sizing: border-box;
     }
     .item:hover {
@@ -49,10 +50,18 @@
       background-color: rgba(255,255,255,1);
     }
     .item img { 
-      max-width: 100%; 
-      max-height: 100%; 
+      max-width: 80%; 
+      max-height: 80%; 
       object-fit: cover;
       border-radius: 8px;
+    }
+    .item-name {
+      font-size: 0.8em;
+      font-weight: bold;
+      color: #2c3e50;
+      margin-top: 5px;
+      text-align: center;
+      line-height: 1.1;
     }
     .message { margin-top: 22px; font-weight: bold; font-size: 1.2em; }
     .info {
@@ -180,16 +189,33 @@ Commun, non menacée.`
       const items = shuffle([...choices, intrus]);
       const gameArea = document.getElementById('gameArea'); gameArea.innerHTML = '';
       items.forEach(item => {
-        const div = document.createElement('div'); div.className = 'item';
+        const div = document.createElement('div'); 
+        div.className = 'item';
+        
+        // Container pour l'image
+        const imgContainer = document.createElement('div');
+        imgContainer.style.flex = '1';
+        imgContainer.style.display = 'flex';
+        imgContainer.style.alignItems = 'center';
+        imgContainer.style.justifyContent = 'center';
+        
         // Image avec le bon nom de fichier
         const img = document.createElement('img');
         img.src = `images/${imageMapping[item]}`;
         img.alt = item;
         img.onerror = function() {
-          // Fallback si l'image n'est pas trouvée
-          this.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgdmlld0JveD0iMCAwIDEwMCAxMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxMDAiIGhlaWdodD0iMTAwIiBmaWxsPSIjZjBmMGYwIi8+Cjx0ZXh0IHg9IjUwIiB5PSI1MCIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjgiIGZpbGw9IiM5OTk5OTkiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGR5PSIuM2VtIj4nICsgaXRlbSArICc8L3RleHQ+Cjwvc3ZnPg==';
+          // Fallback si l'image n'est pas trouvée - affiche juste le nom
+          imgContainer.innerHTML = `<div style="text-align:center; font-size:0.9em; color:#666;">📷<br>Image manquante</div>`;
         };
-        div.appendChild(img);
+        imgContainer.appendChild(img);
+        
+        // Nom de l'espèce
+        const nameDiv = document.createElement('div');
+        nameDiv.className = 'item-name';
+        nameDiv.textContent = item;
+        
+        div.appendChild(imgContainer);
+        div.appendChild(nameDiv);
         div.onclick = () => handleClick(item, intrus);
         gameArea.appendChild(div);
       });
