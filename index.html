@@ -9,8 +9,8 @@
       font-family: Arial, sans-serif;
       text-align: center;
       padding: 20px;
-      /* Image de fond et dégradé */
-      background: url('/mnt/data/A_photograph_captures_a_sunlit_meadow_in_full_bloo.png') center/cover no-repeat, linear-gradient(to top, #80c241 0%, #dff5e5 50%, #a3e3f5 100%);
+      background: url('/mnt/data/A_photograph_captures_a_sunlit_meadow_in_full_bloo.png') center/cover no-repeat,
+                  linear-gradient(to top, #80c241 0%, #dff5e5 50%, #a3e3f5 100%);
       color: #2c3e50;
     }
     h1 { color: #27ae60; }
@@ -39,14 +39,16 @@
       justify-content: center;
       align-items: center;
       cursor: pointer;
-      font-size: 0.9em;
       transition: transform 0.2s, background-color 0.2s;
-      padding: 10px;
-      box-sizing: border-box;
-      text-align: center;
       box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      padding: 5px;
+      box-sizing: border-box;
     }
-    .item:hover { transform: scale(1.05); background-color: rgba(255,255,255,1); }
+    .item:hover {
+      transform: scale(1.05);
+      background-color: rgba(255,255,255,1);
+    }
+    .item img { max-width: 100%; max-height: 100%; }
     .message { margin-top: 22px; font-weight: bold; font-size: 1.2em; }
     .info {
       margin-top: 14px;
@@ -76,9 +78,8 @@
   <div class="game-area" id="gameArea"></div>
   <div class="message" id="message"></div>
   <div class="info" id="info"></div>
-
   <script>
-    // Définitions type Wikipédia
+    // Définitions type Wikipédia et gestes
     const definitions = {
       "Mélibée": `🐛 **Mélibée**
 1. Insecte sauvage des prairies humides montagneuses, ailes gris-brun ornées d’ocelles orangés.
@@ -122,22 +123,21 @@ Population stable, pas besoin de mesures spéciales.`,
 Sauteuse des prairies, herbivore modéré.
 Commun, non menacée.`
     };
-
-    // Liste des intrus par niveau
+    // Paramètres de jeu
     const levels = {
       facile: ["Mélibée","Agrion bleuissant","Cordulie splendide","Serratella mesoleuca","Vanesse des pariétaires"],
       moyen: ["Agrion bleuissant","Cordulie splendide","Serratella mesoleuca","Vanesse des pariétaires","Mélibée"],
       difficile: ["Cordulie splendide","Serratella mesoleuca","Vanesse des pariétaires","Mélibée","Agrion bleuissant"]
     };
     const decoys = ["Mouche domestique","Fourmi","Papillon commun","Scarabée commun","Sauterelle verte"];
-
-    let score = 0, currentLevel = [], currentStep = 0;
+    let score = 0, correctStreak = 0, wrongStreak = 0, currentLevel = [], currentStep = 0;
     const scoreDisplay = document.getElementById('scoreDisplay');
     const infoDiv = document.getElementById('info');
     const levelButtons = document.getElementById('level-buttons');
 
     function startGame(level) {
       currentLevel = levels[level]; currentStep = 0; score = 0;
+      correctStreak = 0; wrongStreak = 0;
       levelButtons.style.display = 'none'; scoreDisplay.style.display = 'block'; updateScore(); infoDiv.textContent = '';
       showStep();
     }
@@ -145,29 +145,51 @@ Commun, non menacée.`
     function showStep() {
       infoDiv.textContent = ''; document.getElementById('message').textContent = '';
       const intrus = currentLevel[currentStep];
-      const choices = shuffle(decoys.slice()).slice(0,4);
+      const choices = shuffle(decoys).slice(0,4);
       const items = shuffle([...choices, intrus]);
       const gameArea = document.getElementById('gameArea'); gameArea.innerHTML = '';
       items.forEach(item => {
-        const div = document.createElement('div'); div.className='item'; div.textContent=item;
-        div.onclick = () => handleClick(item, intrus); gameArea.appendChild(div);
+        const div = document.createElement('div'); div.className = 'item';
+        // Icône flat design
+        const icon = document.createElement('img');
+        icon.src = `images/icons/${item.replace(/\s+/g,'_')}.png`;
+        icon.alt = item;
+        div.appendChild(icon);
+        div.onclick = () => handleClick(item, intrus);
+        gameArea.appendChild(div);
       });
     }
 
     function handleClick(item, intrus) {
-      const msg = document.getElementById('message'); infoDiv.innerHTML = definitions[item] || '';
+      const msg = document.getElementById('message');
+      // Image détaillée et définition
+      infoDiv.innerHTML = `<img src="images/details/${item.replace(/\s+/g,'_')}.png" alt="${item}" style="width:100%;border-radius:8px;margin-bottom:10px;">` + definitions[item];
       if (item === intrus) {
-        score += 10; msg.textContent = `✅ Bravo ! Intrus protégé : ${item}`; msg.style.color = '#27ae60'; currentStep++; updateScore();
-        setTimeout(() => { if (currentStep < currentLevel.length) showStep(); else finishGame(); }, 1000);
+        wrongStreak = 0;
+        correctStreak++;
+        const bonus = 4 + correctStreak; // 5,6,7...
+        score += bonus;
+        msg.textContent = `✅ Bravo ! Intrus protégé : ${item} (+${bonus} pts)`;
+        msg.style.color = '#27ae60';
+        currentStep++; updateScore();
+        setTimeout(() => {
+          if (currentStep < currentLevel.length) showStep(); else finishGame();
+        }, 1000);
       } else {
-        score = Math.max(0, score - 1); msg.textContent = `❌ ${item} n'est pas une espèce à protéger.`; msg.style.color = '#c0392b'; updateScore();
+        correctStreak = 0;
+        wrongStreak++;
+        score = Math.max(0, score - wrongStreak);
+        msg.textContent = `❌ ${item} n'est pas une espèce à protéger (−${wrongStreak} pts)`;
+        msg.style.color = '#c0392b';
+        updateScore();
       }
     }
 
     function finishGame() {
       document.getElementById('gameArea').innerHTML = '';
       document.getElementById('message').textContent = `🎉 Bravo ! Ton score final est ${score} points.`;
-      infoDiv.textContent = ''; levelButtons.style.display = 'block';
+      infoDiv.textContent = '';
+      levelButtons.style.display = 'block';
     }
 
     function updateScore() { scoreDisplay.textContent = `Score : ${score}`; }
