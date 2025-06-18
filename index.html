@@ -14,15 +14,16 @@
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       text-align: center;
-      padding: 10px;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      padding: 0;
+      margin: 0;
+      background: url('fond.png') center center / cover no-repeat fixed;
       color: #2c3e50;
-      min-height: 100vh;
+      height: 100vh;
+      overflow: hidden;
       position: relative;
-      overflow-x: hidden;
     }
 
-    /* Animation de fond */
+    /* Overlay pour améliorer la lisibilité */
     body::before {
       content: '';
       position: fixed;
@@ -30,11 +31,7 @@
       left: 0;
       width: 100%;
       height: 100%;
-      background: 
-        radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
-        radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.3) 0%, transparent 50%),
-        radial-gradient(circle at 40% 40%, rgba(120, 219, 255, 0.2) 0%, transparent 50%);
-      animation: float 6s ease-in-out infinite;
+      background: linear-gradient(135deg, rgba(102, 126, 234, 0.7) 0%, rgba(118, 75, 162, 0.8) 100%);
       z-index: -1;
     }
 
@@ -47,46 +44,59 @@
     .container {
       max-width: 1200px;
       margin: 0 auto;
-      padding: 0 15px;
+      padding: 10px;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    /* En-tête compact */
+    .header {
+      flex-shrink: 0;
+      padding: 5px 0;
     }
 
     /* Titre principal */
     h1 {
       color: #fff;
-      font-size: clamp(1.5rem, 4vw, 2.5rem);
-      margin-bottom: 10px;
-      text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+      font-size: clamp(1.2rem, 3.5vw, 2rem);
+      margin: 5px 0;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
       font-weight: 700;
     }
 
     .subtitle {
-      color: rgba(255,255,255,0.9);
-      font-size: clamp(0.9rem, 2.5vw, 1.1rem);
-      margin-bottom: 25px;
-      font-weight: 300;
+      color: rgba(255,255,255,0.95);
+      font-size: clamp(0.8rem, 2vw, 1rem);
+      margin: 5px 0 10px 0;
+      font-weight: 400;
     }
 
     /* Boutons de niveau */
     #level-buttons {
-      margin: 25px 0;
+      margin: 10px 0;
       display: flex;
       flex-wrap: wrap;
       justify-content: center;
-      gap: 15px;
+      gap: 8px;
+      flex-shrink: 0;
     }
 
     #level-buttons button {
-      padding: 15px 25px;
+      padding: 8px 16px;
       background: linear-gradient(45deg, #ff6b6b, #ee5a52);
       border: none;
       color: #fff;
-      border-radius: 25px;
+      border-radius: 20px;
       cursor: pointer;
-      font-size: clamp(0.9rem, 2.5vw, 1rem);
+      font-size: clamp(0.8rem, 2vw, 0.9rem);
       font-weight: 600;
       transition: all 0.3s ease;
-      box-shadow: 0 4px 15px rgba(238, 90, 82, 0.4);
-      min-width: 140px;
+      box-shadow: 0 3px 10px rgba(238, 90, 82, 0.4);
+      flex: 1;
+      min-width: 120px;
+      max-width: 160px;
     }
 
     #level-buttons button:hover {
@@ -101,25 +111,29 @@
 
     /* Score */
     .score {
-      font-size: clamp(1.1rem, 3vw, 1.4rem);
-      margin: 20px 0;
+      font-size: clamp(0.9rem, 2.5vw, 1.1rem);
+      margin: 8px 0;
       color: #fff;
       font-weight: 600;
-      background: rgba(255,255,255,0.1);
+      background: rgba(255,255,255,0.15);
       backdrop-filter: blur(10px);
-      border-radius: 20px;
-      padding: 12px 20px;
+      border-radius: 15px;
+      padding: 8px 16px;
       display: inline-block;
       border: 1px solid rgba(255,255,255,0.2);
+      flex-shrink: 0;
     }
 
-    /* Zone de jeu */
+    /* Zone de jeu - centrale et flexible */
     .game-area {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-      gap: 15px;
-      margin: 25px 0;
-      padding: 0 10px;
+      grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+      gap: 8px;
+      padding: 0 5px;
+      flex: 1;
+      align-content: center;
+      max-height: 60vh;
+      overflow: hidden;
     }
 
     /* Cartes des espèces */
@@ -183,99 +197,176 @@
       line-height: 1.2;
     }
 
-    /* Messages */
+    /* Messages - plus compacts */
     .message {
-      margin: 25px 0;
+      margin: 8px 0;
       font-weight: 600;
-      font-size: clamp(1rem, 3vw, 1.3rem);
-      padding: 15px 20px;
-      border-radius: 15px;
-      background: rgba(255,255,255,0.1);
+      font-size: clamp(0.85rem, 2.5vw, 1rem);
+      padding: 8px 15px;
+      border-radius: 12px;
+      background: rgba(255,255,255,0.15);
       backdrop-filter: blur(10px);
       border: 1px solid rgba(255,255,255,0.2);
       color: #fff;
-      max-width: 600px;
+      max-width: 500px;
       margin-left: auto;
       margin-right: auto;
+      flex-shrink: 0;
     }
 
-    /* Zone d'informations */
+    /* Zone d'informations - compacte et scrollable si nécessaire */
     .info {
-      margin: 20px auto;
-      font-size: clamp(0.85rem, 2.2vw, 0.95rem);
+      margin: 8px auto 0;
+      font-size: clamp(0.75rem, 2vw, 0.85rem);
       text-align: left;
-      padding: 20px;
-      background: rgba(255,255,255,0.95);
+      padding: 12px;
+      background: rgba(255,255,255,0.92);
       backdrop-filter: blur(10px);
       border: 1px solid rgba(255,255,255,0.3);
-      border-radius: 20px;
-      max-width: 700px;
-      line-height: 1.5;
+      border-radius: 15px;
+      max-width: 600px;
+      line-height: 1.4;
       white-space: pre-line;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+      box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+      max-height: 25vh;
+      overflow-y: auto;
+      flex-shrink: 1;
     }
 
     .info img {
       width: 100%;
-      max-width: 300px;
-      border-radius: 15px;
-      margin-bottom: 15px;
+      max-width: 200px;
+      border-radius: 10px;
+      margin-bottom: 8px;
       display: block;
       margin-left: auto;
       margin-right: auto;
-      box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+      box-shadow: 0 3px 10px rgba(0,0,0,0.2);
     }
 
-    /* Responsive design */
+    /* Responsive design optimisé pour pas de scroll */
     @media (max-width: 768px) {
-      body {
-        padding: 15px 10px;
+      .container {
+        padding: 5px;
       }
       
       .game-area {
-        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-        gap: 12px;
-        padding: 0 5px;
+        grid-template-columns: repeat(auto-fit, minmax(95px, 1fr));
+        gap: 6px;
+        max-height: 55vh;
       }
       
       .item {
-        height: 160px;
-        padding: 12px;
+        height: clamp(100px, 12vh, 120px);
+        padding: 6px;
       }
       
       .item img {
-        max-height: 90px;
+        max-height: 60%;
+      }
+      
+      .item-name {
+        font-size: clamp(0.6rem, 1.5vw, 0.7rem);
       }
       
       #level-buttons {
-        flex-direction: column;
-        align-items: center;
+        gap: 6px;
       }
       
       #level-buttons button {
-        width: 100%;
-        max-width: 280px;
+        padding: 6px 12px;
+        min-width: 100px;
+        font-size: clamp(0.75rem, 1.8vw, 0.85rem);
+      }
+      
+      .info {
+        max-height: 20vh;
+        padding: 8px;
       }
     }
 
     @media (max-width: 480px) {
+      h1 {
+        font-size: clamp(1rem, 3vw, 1.5rem);
+        margin: 2px 0;
+      }
+      
+      .subtitle {
+        font-size: clamp(0.7rem, 1.8vw, 0.9rem);
+        margin: 2px 0 5px 0;
+      }
+      
       .game-area {
         grid-template-columns: repeat(2, 1fr);
-        gap: 10px;
+        gap: 5px;
+        max-height: 50vh;
       }
       
       .item {
-        height: 140px;
-        padding: 10px;
+        height: clamp(90px, 10vh, 110px);
+        padding: 4px;
       }
       
       .item img {
-        max-height: 75px;
+        max-height: 55%;
+      }
+      
+      .item-name {
+        font-size: clamp(0.55rem, 1.4vw, 0.65rem);
+        margin-top: 2px;
       }
       
       .info {
-        padding: 15px;
-        margin: 15px 10px;
+        padding: 6px;
+        margin: 5px 2px 0;
+        max-height: 18vh;
+      }
+      
+      .message {
+        padding: 6px 10px;
+        margin: 5px 0;
+        font-size: clamp(0.75rem, 2vw, 0.9rem);
+      }
+      
+      .score {
+        padding: 5px 12px;
+        margin: 5px 0;
+        font-size: clamp(0.8rem, 2vw, 0.95rem);
+      }
+    }
+
+    /* Responsive en hauteur pour écrans très courts */
+    @media (max-height: 600px) {
+      .container {
+        padding: 3px;
+      }
+      
+      h1 {
+        font-size: clamp(0.9rem, 2.5vw, 1.3rem);
+        margin: 2px 0;
+      }
+      
+      .subtitle {
+        font-size: clamp(0.65rem, 1.5vw, 0.8rem);
+        margin: 2px 0;
+      }
+      
+      .game-area {
+        max-height: 45vh;
+        gap: 4px;
+      }
+      
+      .item {
+        height: clamp(70px, 8vh, 90px);
+      }
+      
+      .info {
+        max-height: 15vh;
+        padding: 6px;
+      }
+      
+      #level-buttons button {
+        padding: 4px 8px;
       }
     }
 
@@ -340,18 +431,21 @@
 </head>
 <body>
   <div class="container">
-    <h1>⭐ Trouve l'intrus : Les Héros Invisibles ⭐</h1>
-    <p class="subtitle">Le but ? Démasquer l'espèce en danger pour mieux la protéger !</p>
-    
-    <div id="level-buttons">
-      <button onclick="startGame('facile')">🟢 Facile (4 choix)</button>
-      <button onclick="startGame('moyen')">🟡 Moyen (6 choix)</button>
-      <button onclick="startGame('difficile')">🔴 Difficile (8 choix)</button>
+    <div class="header">
+      <h1>⭐ Trouve l'intrus : Les Héros Invisibles ⭐</h1>
+      <p class="subtitle">Le but ? Démasquer l'espèce en danger pour mieux la protéger !</p>
+      
+      <div id="level-buttons">
+        <button onclick="startGame('facile')">🟢 Facile (4 choix)</button>
+        <button onclick="startGame('moyen')">🟡 Moyen (6 choix)</button>
+        <button onclick="startGame('difficile')">🔴 Difficile (8 choix)</button>
+      </div>
+      
+      <div class="score" id="scoreDisplay" style="display:none;">Score : 0</div>
+      <div class="message" id="message"></div>
     </div>
     
-    <div class="score" id="scoreDisplay" style="display:none;">Score : 0</div>
     <div class="game-area" id="gameArea"></div>
-    <div class="message" id="message"></div>
     <div class="info" id="info"></div>
   </div>
 
