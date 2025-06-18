@@ -3,10 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <title>Jeu : Trouve l'intrus - Les Héros Invisibles</title>
-  <!-- Configuration des images -->
-  <script src="imageConfig.js"></script>
   <style>
-    /* Fond inspiré de la palette et ambiance Ciao Kombucha */
     body {
       font-family: Arial, sans-serif;
       text-align: center;
@@ -93,92 +90,290 @@
 </head>
 <body>
   <h1>⭐ Trouve l'intrus : Les Héros Invisibles ⭐</h1>
-  <p>Le but ? Démasquer l'insecte en danger pour mieux le protéger !</p>
+  <p>Le but ? Démasquer l'espèce en danger pour mieux la protéger !</p>
   <div id="level-buttons">
-    <button onclick="startGame('facile')">Facile</button>
-    <button onclick="startGame('moyen')">Moyen</button>
-    <button onclick="startGame('difficile')">Difficile</button>
+    <button onclick="startGame('facile')">Facile (4 choix)</button>
+    <button onclick="startGame('moyen')">Moyen (6 choix)</button>
+    <button onclick="startGame('difficile')">Difficile (8 choix)</button>
   </div>
   <div class="score" id="scoreDisplay" style="display:none;">Score : 0</div>
   <div class="game-area" id="gameArea"></div>
   <div class="message" id="message"></div>
   <div class="info" id="info"></div>
+
   <script>
-    // Le mapping est maintenant dans imageConfig.js
-    // On utilise la variable globale imageConfig
+    // === LISTES DES ESPÈCES ===
+    
+    // 🦸 Intrus (espèces menacées à protéger)
+    const endangeredSpecies = [
+      "Mélibée",
+      "Vanesse des pariétaires", 
+      "Agrion bleuissant",
+      "Cordulie splendide",
+      "Serratella mesoleuca",
+      "Halictus carinthiacus",
+      "Bourdon velouté",
+      "Criquet de la Crau",
+      "Phasme du palmiste rouge",
+      "Dendrobias maxillosus"
+    ];
 
-    // Définitions type Wikipédia et gestes
+    // 🐞 Décoys (espèces non menacées)
+    const commonSpecies = [
+      "Chauve-souris frugivore",
+      "Colibri",
+      "Mouche domestique",
+      "Fourmi noire",
+      "Papillon commun",
+      "Abeille domestique",
+      "Sauterelle verte",
+      "Scarabée commun",
+      "Coccinelle à sept points",
+      "Termite des forêts",
+      "Grillon champêtre",
+      "Larve de coccinelle",
+      "Cicadelle",
+      "Lucane cerf-volant",
+      "Punaise verte",
+      "Mite des vêtements",
+      "Perce-oreille",
+      "Loup",
+      "Renard",
+      "Chat",
+      "Chien",
+      "Pigeon"
+    ];
+
+    // === DÉFINITIONS ET GESTES DE PROTECTION ===
     const definitions = {
-      "Mélibée": `🐛 **Mélibée**
-1. Insecte sauvage des prairies humides montagneuses, ailes gris-brun ornées d'ocelles orangés.
-2. Pollinisateur essentiel du trèfle, base de la chaîne alimentaire locale.
-3. Menacé par la disparition des prairies humides et les monocultures.
-**Gestes** : Plante des graminées et fleurs sauvages, protège les zones humides près de chez toi.`,
-      "Agrion bleuissant": `💧 **Agrion bleuissant**
-1. Petite libellule aquatique au corps bleu et noir, larves vivant dans les ruisseaux clairs.
-2. Régulateur naturel des populations de moustiques, indicateur de qualité de l'eau.
-3. Menacé par l'assèchement des cours d'eau et la pollution agricole.
-**Gestes** : Crée un petit bassin sans pesticides, plante une bande tampon végétalisée.`,
-      "Cordulie splendide": `✨ **Cordulie splendide**
-1. Libellule au corps métallique vert, fréquente les mares méditerranéennes.
-2. Prédateur efficace des moustiques, grâce à son vol acrobatique.
-3. Menacée par la pollution lumineuse et la destruction des zones humides.
-**Gestes** : Installe des éclairages à spectre adapté, restaure et protège les mares locales.`,
-      "Serratella mesoleuca": `💦 **Serratella mesoleuca**
-1. Éphémère d'eau douce, nymphes aquatiques jusqu'à 3 ans avant leur vie brève de quelques heures.
-2. Nourrit essentiel pour poissons et oiseaux, bio-indicateur des rivières saines.
-3. Menacée par le dragage et l'artificialisation des berges.
-**Gestes** : Encourage la végétation naturelle des berges, limite les travaux lourds en rivière.`,
+      // Espèces menacées
+      "Mélibée": `🦋 **Mélibée**
+1. Papillon rare des prairies humides, reconnaissable à ses ailes oranges tachetées de noir.
+2. Pollinisateur spécialisé des fleurs de prairie, indispensable à la biodiversité montagnarde.
+3. Menacé par l'assèchement des zones humides et l'agriculture intensive.
+**Gestes** : Préserve les prairies fleuries, évite les pesticides, crée des corridors verts.`,
+
       "Vanesse des pariétaires": `🦋 **Vanesse des pariétaires**
-1. Papillon fauve aux ailes très découpées, vivant sur les murs chauds où pousse la pariétaire.
-2. Chenille dépendante de la pariétaire officinale, illustrant l'importance des plantes-hôtes.
-3. Menacée par la bétonisation et le nettoyage des murs.
-**Gestes** : Laisse pousser la pariétaire sur un mur, évite les herbicides et nettoyages intempestifs.`,
-      // Décoys succincts
-      "Mouche domestique": `🐜 **Mouche domestique**
-Insecte ubiquitaire, recycle les déchets organiques.
-Non menacée, pas besoin de protection.`,
-      "Fourmi": `🐜 **Fourmi**
-Sociale, vit en colonies complexes, aère le sol.
-Espèce commune, non en danger.`,
-      "Papillon commun": `🦋 **Papillon commun (piéride)**
-Blanc fréquent dans les jardins, pollinise occasionnellement.
-Résilient, non menacé.`,
-      "Scarabée commun": `🐞 **Scarabée commun**
-Coléoptère détruisant la matière organique morte.
-Population stable, pas besoin de mesures spéciales.`,
+1. Papillon aux ailes découpées, dépendant exclusivement de la pariétaire officinale.
+2. Exemple parfait de coévolution : chenille-plante hôte indissociables.
+3. Menacée par le nettoyage urbain et l'usage d'herbicides.
+**Gestes** : Laisse pousser la pariétaire sur tes murs, évite les désherbants chimiques.`,
+
+      "Agrion bleuissant": `💧 **Agrion bleuissant**
+1. Petite libellule bleue vivant près des cours d'eau clairs et oxygénés.
+2. Prédateur de moustiques efficace, indicateur de qualité des milieux aquatiques.
+3. Menacé par la pollution de l'eau et l'artificialisation des berges.
+**Gestes** : Protège les ruisseaux, évite les produits chimiques près de l'eau.`,
+
+      "Cordulie splendide": `✨ **Cordulie splendide**
+1. Libellule métallique des mares temporaires méditerranéennes.
+2. Vol spectaculaire et chasse aérienne remarquable contre les insectes nuisibles.
+3. Menacée par la disparition des zones humides temporaires.
+**Gestes** : Crée des mares naturelles, respecte les flaques temporaires.`,
+
+      "Serratella mesoleuca": `💦 **Serratella mesoleuca**
+1. Éphémère aux larves aquatiques, vie adulte de quelques heures seulement.
+2. Maillon essentiel de la chaîne alimentaire des rivières.
+3. Menacée par la pollution et la modification des cours d'eau.
+**Gestes** : Protège la végétation des berges, évite les rejets polluants.`,
+
+      "Halictus carinthiacus": `🐝 **Halictus carinthiacus**
+1. Abeille sauvage solitaire, excellente pollinisatrice des fleurs alpines.
+2. Creuse ses nids dans le sol, plus efficace que l'abeille domestique sur certaines fleurs.
+3. Menacée par l'urbanisation et le piétinement des sols.
+**Gestes** : Préserve les sols nus, plante des fleurs locales, évite le bêchage.`,
+
+      "Bourdon velouté": `🐝 **Bourdon velouté**
+1. Bourdon au pelage dense, spécialisé dans la pollinisation par vibration.
+2. Pollinisateur irremplaçable des tomates et autres solanacées.
+3. Menacé par les pesticides et la raréfaction des fleurs sauvages.
+**Gestes** : Plante des fleurs mellifères, bannis les insecticides, crée des abris.`,
+
+      "Criquet de la Crau": `🦗 **Criquet de la Crau**
+1. Criquet endémique de la plaine de la Crau, habitat unique au monde.
+2. Indicateur de la santé des écosystèmes de coussouls (pelouses sèches).
+3. Menacé par l'urbanisation et l'agriculture intensive.
+**Gestes** : Soutiens la protection des espaces naturels, respecte les pelouses sèches.`,
+
+      "Phasme du palmiste rouge": `🌿 **Phasme du palmiste rouge**
+1. Insecte-bâton tropical, maître du camouflage dans les palmiers.
+2. Herbivore spécialisé, participant à l'équilibre des forêts tropicales.
+3. Menacé par la déforestation et les espèces invasives.
+**Gestes** : Soutiens la protection des forêts tropicales, choisis des produits durables.`,
+
+      "Dendrobias maxillosus": `🪲 **Dendrobias maxillosus**
+1. Coléoptère saproxylique, décomposeur de bois mort essentiel.
+2. Indicateur de la qualité des vieilles forêts, recycleur naturel.
+3. Menacé par l'exploitation forestière intensive et le nettoyage des forêts.
+**Gestes** : Laisse du bois mort en forêt, soutiens la gestion durable des forêts.`,
+
+      // Espèces communes (descriptions plus courtes)
+      "Chauve-souris frugivore": `🦇 **Chauve-souris frugivore**
+Mammifère volant, disperse les graines des fruits.
+Population stable, adaptable aux environnements variés.`,
+
+      "Colibri": `🐦 **Colibri**
+Oiseau-mouche, pollinisateur de fleurs tubulaires.
+Espèce commune dans son habitat naturel.`,
+
+      "Mouche domestique": `🪰 **Mouche domestique**
+Insecte ubiquiste, recycle la matière organique.
+Très commune, non menacée.`,
+
+      "Fourmi noire": `🐜 **Fourmi noire**
+Insecte social, aère le sol et disperse les graines.
+Population abondante et stable.`,
+
+      "Papillon commun": `🦋 **Papillon commun**
+Piéride blanche, pollinisateur occasionnel des jardins.
+Très répandu, population en bonne santé.`,
+
+      "Abeille domestique": `🐝 **Abeille domestique**
+Hyménoptère élevé par l'homme, pollinisateur efficace.
+Gérée par l'apiculture, non sauvage.`,
+
       "Sauterelle verte": `🦗 **Sauterelle verte**
-Sauteuse des prairies, herbivore modéré.
-Commun, non menacée.`
+Orthoptère herbivore des prairies et jardins.
+Commune partout, très adaptable.`,
+
+      "Scarabée commun": `🪲 **Scarabée commun**
+Coléoptère décomposeur, recycle la matière organique.
+Population stable, pas de menace particulière.`,
+
+      "Coccinelle à sept points": `🐞 **Coccinelle à sept points**
+Prédateur naturel des pucerons, auxiliaire du jardinier.
+Très commune, non menacée.`,
+
+      "Termite des forêts": `🐜 **Termite des forêts**
+Insecte social décomposeur, recycle le bois mort.
+Population stable dans les forêts.`,
+
+      "Grillon champêtre": `🦗 **Grillon champêtre**
+Orthoptère chanteur des prairies et jardins.
+Très commun, non menacé.`,
+
+      "Larve de coccinelle": `🐛 **Larve de coccinelle**
+Stade juvénile de coccinelle, grand prédateur de pucerons.
+Abondante, non menacée.`,
+
+      "Cicadelle": `🦗 **Cicadelle**
+Petit insecte sauteur se nourrissant de sève.
+Très commune, non menacée.`,
+
+      "Lucane cerf-volant": `🪲 **Lucane cerf-volant**
+Grand coléoptère aux mandibules impressionnantes.
+Relativement commun, non menacé globalement.`,
+
+      "Punaise verte": `🐛 **Punaise verte**
+Insecte herbivore des jardins et cultures.
+Très commune, parfois considérée comme nuisible.`,
+
+      "Mite des vêtements": `🦋 **Mite des vêtements**
+Petit papillon dont la larve mange les textiles.
+Très commune dans les habitations.`,
+
+      "Perce-oreille": `🦗 **Perce-oreille**
+Insecte aux pinces caractéristiques, omnivore.
+Très commun, non menacé.`,
+
+      "Loup": `🐺 **Loup**
+Mammifère carnivore, prédateur apex.
+Population en récupération, non insecte.`,
+
+      "Renard": `🦊 **Renard**
+Mammifère omnivore adaptable.
+Population stable, non insecte.`,
+
+      "Chat": `🐱 **Chat**
+Mammifère domestique, prédateur d'oiseaux et petits animaux.
+Très commun, non insecte.`,
+
+      "Chien": `🐶 **Chien**
+Mammifère domestique, compagnon de l'homme.
+Très commun, non insecte.`,
+
+      "Pigeon": `🐦 **Pigeon**
+Oiseau urbain très adaptable.
+Très commun en ville, non insecte.`
     };
 
-    // Paramètres de jeu
-    const levels = {
-      facile: ["Mélibée","Agrion bleuissant","Cordulie splendide","Serratella mesoleuca","Vanesse des pariétaires"],
-      moyen: ["Agrion bleuissant","Cordulie splendide","Serratella mesoleuca","Vanesse des pariétaires","Mélibée"],
-      difficile: ["Cordulie splendide","Serratella mesoleuca","Vanesse des pariétaires","Mélibée","Agrion bleuissant"]
+    // === CONFIGURATION DU JEU ===
+    const gameConfig = {
+      facile: { choices: 4, rounds: 5 },
+      moyen: { choices: 6, rounds: 7 },
+      difficile: { choices: 8, rounds: 10 }
     };
-    const decoys = ["Mouche domestique","Fourmi","Papillon commun","Scarabée commun","Sauterelle verte"];
-    let score = 0, correctStreak = 0, wrongStreak = 0, currentLevel = [], currentStep = 0;
+
+    // Variables de jeu
+    let score = 0;
+    let correctStreak = 0;
+    let wrongStreak = 0;
+    let currentRound = 0;
+    let totalRounds = 0;
+    let currentLevel = '';
+    let usedEndangered = [];
+
     const scoreDisplay = document.getElementById('scoreDisplay');
     const infoDiv = document.getElementById('info');
     const levelButtons = document.getElementById('level-buttons');
+    const messageDiv = document.getElementById('message');
+    const gameArea = document.getElementById('gameArea');
 
-    function startGame(level) {
-      currentLevel = levels[level]; currentStep = 0; score = 0;
-      correctStreak = 0; wrongStreak = 0;
-      levelButtons.style.display = 'none'; scoreDisplay.style.display = 'block'; updateScore(); infoDiv.innerHTML = '';
-      showStep();
+    // === FONCTIONS UTILITAIRES ===
+    function shuffle(arr) {
+      return arr.sort(() => Math.random() - 0.5);
     }
 
-    function showStep() {
-      infoDiv.innerHTML = ''; document.getElementById('message').textContent = '';
-      const intrus = currentLevel[currentStep];
-      const choices = shuffle(decoys).slice(0,4);
+    function getImagePath(speciesName) {
+      return `images/${speciesName}.jpg`;
+    }
+
+    // === DÉMARRAGE DU JEU ===
+    function startGame(level) {
+      currentLevel = level;
+      currentRound = 0;
+      score = 0;
+      correctStreak = 0;
+      wrongStreak = 0;
+      usedEndangered = [];
+      
+      totalRounds = gameConfig[level].rounds;
+      
+      levelButtons.style.display = 'none';
+      scoreDisplay.style.display = 'block';
+      updateScore();
+      infoDiv.innerHTML = '';
+      
+      showRound();
+    }
+
+    // === AFFICHAGE D'UNE MANCHE ===
+    function showRound() {
+      infoDiv.innerHTML = '';
+      messageDiv.textContent = `Manche ${currentRound + 1}/${totalRounds}`;
+      messageDiv.style.color = '#2c3e50';
+      
+      // Choisir un intrus qui n'a pas encore été utilisé
+      const availableEndangered = endangeredSpecies.filter(species => !usedEndangered.includes(species));
+      if (availableEndangered.length === 0) {
+        // Si tous ont été utilisés, on recommence la liste
+        usedEndangered = [];
+      }
+      
+      const intrus = availableEndangered[Math.floor(Math.random() * availableEndangered.length)];
+      usedEndangered.push(intrus);
+      
+      // Choisir les décoys
+      const nbChoices = gameConfig[currentLevel].choices;
+      const choices = shuffle(commonSpecies).slice(0, nbChoices - 1);
+      
+      // Mélanger tous les éléments
       const items = shuffle([...choices, intrus]);
-      const gameArea = document.getElementById('gameArea'); gameArea.innerHTML = '';
+      
+      // Afficher les cartes
+      gameArea.innerHTML = '';
       items.forEach(item => {
-        const div = document.createElement('div'); 
+        const div = document.createElement('div');
         div.className = 'item';
         
         // Container pour l'image
@@ -188,12 +383,11 @@ Commun, non menacée.`
         imgContainer.style.alignItems = 'center';
         imgContainer.style.justifyContent = 'center';
         
-        // Image avec le bon nom de fichier
+        // Image
         const img = document.createElement('img');
         img.src = getImagePath(item);
         img.alt = item;
         img.onerror = function() {
-          // Fallback si l'image n'est pas trouvée - affiche juste le nom
           imgContainer.innerHTML = `<div style="text-align:center; font-size:0.9em; color:#666;">📷<br>Image manquante</div>`;
         };
         imgContainer.appendChild(img);
@@ -210,43 +404,72 @@ Commun, non menacée.`
       });
     }
 
+    // === GESTION DU CLIC ===
     function handleClick(item, intrus) {
-      const msg = document.getElementById('message');
-      // Image détaillée et définition
+      // Afficher les informations sur l'espèce
       const detailImg = `<img src="${getImagePath(item)}" alt="${item}">`;
       infoDiv.innerHTML = detailImg + definitions[item];
       
       if (item === intrus) {
+        // Bonne réponse !
         wrongStreak = 0;
         correctStreak++;
-        const bonus = 4 + correctStreak; // 5,6,7...
+        const bonus = 10 + correctStreak * 2; // 12, 14, 16...
         score += bonus;
-        msg.textContent = `✅ Bravo ! Intrus protégé : ${item} (+${bonus} pts)`;
-        msg.style.color = '#27ae60';
-        currentStep++; updateScore();
+        messageDiv.textContent = `✅ Bravo ! Espèce protégée : ${item} (+${bonus} pts)`;
+        messageDiv.style.color = '#27ae60';
+        
+        currentRound++;
+        updateScore();
+        
         setTimeout(() => {
-          if (currentStep < currentLevel.length) showStep(); else finishGame();
+          if (currentRound < totalRounds) {
+            showRound();
+          } else {
+            finishGame();
+          }
         }, 3000);
+        
       } else {
+        // Mauvaise réponse
         correctStreak = 0;
         wrongStreak++;
-        score = Math.max(0, score - wrongStreak);
-        msg.textContent = `❌ ${item} n'est pas une espèce à protéger (−${wrongStreak} pts)`;
-        msg.style.color = '#c0392b';
+        const penalty = wrongStreak * 3;
+        score = Math.max(0, score - penalty);
+        messageDiv.textContent = `❌ ${item} n'est pas une espèce à protéger (-${penalty} pts)`;
+        messageDiv.style.color = '#c0392b';
         updateScore();
       }
     }
 
+    // === FIN DE PARTIE ===
     function finishGame() {
-      document.getElementById('gameArea').innerHTML = '';
-      document.getElementById('message').textContent = `🎉 Bravo ! Ton score final est ${score} points.`;
+      gameArea.innerHTML = '';
+      
+      let performance = '';
+      if (score >= totalRounds * 10) performance = '🏆 Excellent !';
+      else if (score >= totalRounds * 7) performance = '🥇 Très bien !';
+      else if (score >= totalRounds * 5) performance = '🥈 Bien !';
+      else performance = '🥉 À améliorer !';
+      
+      messageDiv.innerHTML = `
+        <div style="font-size: 1.4em; margin-bottom: 10px;">${performance}</div>
+        <div>Score final : ${score} points</div>
+        <div style="font-size: 0.9em; margin-top: 10px;">
+          Merci d'avoir joué pour la protection de la biodiversité !
+        </div>
+      `;
+      messageDiv.style.color = '#27ae60';
+      
       infoDiv.innerHTML = '';
       levelButtons.style.display = 'block';
       scoreDisplay.style.display = 'none';
     }
 
-    function updateScore() { scoreDisplay.textContent = `Score : ${score}`; }
-    function shuffle(arr) { return arr.sort(() => Math.random() - 0.5); }
+    // === MISE À JOUR DU SCORE ===
+    function updateScore() {
+      scoreDisplay.textContent = `Score : ${score}`;
+    }
   </script>
 </body>
 </html>
