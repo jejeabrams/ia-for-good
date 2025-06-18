@@ -205,33 +205,39 @@
         div.className = "item";
         div.textContent = item;
         div.onclick = () => {
-          // Désactiver tous les boutons après un clic
-          const allItems = document.querySelectorAll('.item');
-          allItems.forEach(btn => btn.style.pointerEvents = 'none');
-          
           if (item === correctAnswer) {
+            // Désactiver tous les boutons après une victoire
+            const allItems = document.querySelectorAll('.item');
+            allItems.forEach(btn => btn.style.pointerEvents = 'none');
+            
             message.textContent = "✅ Excellent ! Le drone est bien l'intrus. Les autres sont tous des insectes menacés qu'il faut protéger !";
             message.className = "message success";
             div.style.backgroundColor = "#d4edda";
             div.style.borderColor = "#28a745";
+            restartBtn.style.display = "inline-block";
           } else {
+            // Afficher le message d'erreur sans bloquer les autres boutons
             message.textContent = "❌ Oups ! " + item.split(' ')[1] + " est un insecte menacé qu'il faut protéger. Essaie encore !";
             message.className = "message error";
+            
+            // Effet visuel temporaire sur le bouton cliqué
+            const originalBg = div.style.backgroundColor;
+            const originalBorder = div.style.borderColor;
             div.style.backgroundColor = "#f8d7da";
             div.style.borderColor = "#dc3545";
             
-            // Réactiver les boutons après 2 secondes pour une nouvelle tentative
+            // Remettre l'apparence normale après 1 seconde
             setTimeout(() => {
-              allItems.forEach(btn => btn.style.pointerEvents = 'auto');
-              div.style.backgroundColor = "#ffffff";
-              div.style.borderColor = "#1a8f5c";
+              div.style.backgroundColor = originalBg || "#ffffff";
+              div.style.borderColor = originalBorder || "#1a8f5c";
+            }, 1000);
+            
+            // Effacer le message d'erreur après 2 secondes
+            setTimeout(() => {
               message.textContent = "";
               message.className = "message";
-            }, 2500);
-            return;
+            }, 2000);
           }
-          
-          restartBtn.style.display = "inline-block";
         };
         gameArea.appendChild(div);
       });
