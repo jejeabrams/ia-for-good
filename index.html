@@ -4,102 +4,276 @@
   <meta charset="UTF-8">
   <title>Jeu : Trouve l'intrus - Les Héros Invisibles</title>
   <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
     body {
-      font-family: Arial, sans-serif;
-      text-align: center;
-      padding: 20px;
-      background: linear-gradient(to top, #80c241 0%, #dff5e5 50%, #a3e3f5 100%);
+      font-family: 'Arial', sans-serif;
+      background: url('fond.png') center/cover no-repeat fixed,
+                  linear-gradient(135deg, rgba(128,194,65,0.8) 0%, rgba(163,227,245,0.8) 100%);
       color: #2c3e50;
       min-height: 100vh;
+      overflow-x: hidden;
     }
-    h1 { color: #27ae60; }
-    #level-buttons { margin: 20px 0; }
+    
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 10px;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    header {
+      text-align: center;
+      padding: 15px 0;
+      background: rgba(255,255,255,0.95);
+      border-radius: 20px;
+      margin-bottom: 15px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+      backdrop-filter: blur(10px);
+    }
+    
+    h1 { 
+      color: #27ae60; 
+      font-size: clamp(1.5rem, 4vw, 2.5rem);
+      margin-bottom: 8px;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+    }
+    
+    .subtitle {
+      font-size: clamp(0.9rem, 2.5vw, 1.1rem);
+      color: #34495e;
+      margin-bottom: 15px;
+    }
+    
+    #level-buttons { 
+      display: flex; 
+      gap: 10px; 
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    
     #level-buttons button {
-      margin: 5px;
       padding: 12px 20px;
-      background-color: #27ae60;
+      background: linear-gradient(135deg, #27ae60, #2ecc71);
       border: none;
-      color: #fff;
-      border-radius: 8px;
+      color: white;
+      border-radius: 25px;
       cursor: pointer;
-      font-size: 1em;
-      transition: background-color 0.2s;
+      font-size: clamp(0.9rem, 2vw, 1rem);
+      font-weight: bold;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(39,174,96,0.3);
     }
-    #level-buttons button:hover { background-color: #1e884a; }
-    .score { font-size: 1.4em; margin-top: 12px; }
-    .game-area { display: flex; flex-wrap: wrap; justify-content: center; gap: 16px; margin-top: 25px; }
+    
+    #level-buttons button:hover { 
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(39,174,96,0.4);
+    }
+    
+    .game-info {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(255,255,255,0.9);
+      padding: 15px 20px;
+      border-radius: 15px;
+      margin-bottom: 15px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    
+    .score { 
+      font-size: clamp(1.1rem, 3vw, 1.4rem);
+      font-weight: bold;
+      color: #27ae60;
+    }
+    
+    .round-info {
+      font-size: clamp(1rem, 2.5vw, 1.2rem);
+      color: #34495e;
+      font-weight: bold;
+    }
+    
+    .game-area { 
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+      gap: 15px;
+      margin: 15px 0;
+      flex-grow: 1;
+    }
+    
     .item {
-      background-color: rgba(255,255,255,0.8);
-      border: 2px solid #27ae60;
-      border-radius: 12px;
-      width: 140px;
-      height: 160px;
+      background: rgba(255,255,255,0.95);
+      border: 3px solid transparent;
+      border-radius: 20px;
+      aspect-ratio: 1;
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
       cursor: pointer;
-      transition: transform 0.2s, background-color 0.2s;
-      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-      padding: 8px;
-      box-sizing: border-box;
+      transition: all 0.3s ease;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+      backdrop-filter: blur(10px);
+      padding: 10px;
+      position: relative;
+      overflow: hidden;
     }
+    
+    .item::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(135deg, rgba(39,174,96,0.1), rgba(46,204,113,0.1));
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    
     .item:hover {
-      transform: scale(1.05);
-      background-color: rgba(255,255,255,1);
+      transform: translateY(-5px) scale(1.02);
+      border-color: #27ae60;
+      box-shadow: 0 15px 40px rgba(39,174,96,0.2);
     }
+    
+    .item:hover::before {
+      opacity: 1;
+    }
+    
     .item img { 
-      max-width: 80%; 
-      max-height: 80%; 
+      width: 70%;
+      height: 70%;
       object-fit: cover;
-      border-radius: 8px;
+      border-radius: 12px;
+      position: relative;
+      z-index: 1;
     }
+    
     .item-name {
-      font-size: 0.8em;
+      font-size: clamp(0.7rem, 2vw, 0.85rem);
       font-weight: bold;
       color: #2c3e50;
-      margin-top: 5px;
+      margin-top: 8px;
       text-align: center;
-      line-height: 1.1;
+      line-height: 1.2;
+      position: relative;
+      z-index: 1;
     }
-    .message { margin-top: 22px; font-weight: bold; font-size: 1.2em; }
+    
+    .message { 
+      text-align: center;
+      font-weight: bold; 
+      font-size: clamp(1rem, 3vw, 1.3rem);
+      padding: 15px;
+      background: rgba(255,255,255,0.9);
+      border-radius: 15px;
+      margin: 15px 0;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+    
     .info {
-      margin-top: 14px;
-      font-size: 0.95em;
-      text-align: left;
-      padding: 18px;
-      background-color: rgba(255,255,255,0.9);
-      border: 1px solid #27ae60;
-      border-radius: 8px;
-      max-width: 680px;
-      margin: 14px auto;
-      line-height: 1.4;
-      white-space: pre-line;
-      box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+      background: rgba(255,255,255,0.95);
+      border-radius: 20px;
+      padding: 20px;
+      margin: 15px 0;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.1);
+      backdrop-filter: blur(10px);
+      line-height: 1.6;
+      font-size: clamp(0.9rem, 2.2vw, 1rem);
     }
+    
     .info img {
       width: 100%;
-      max-width: 300px;
-      border-radius: 8px;
-      margin-bottom: 10px;
+      max-width: 200px;
+      height: 150px;
+      object-fit: cover;
+      border-radius: 15px;
+      margin: 0 auto 15px;
       display: block;
-      margin-left: auto;
-      margin-right: auto;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
     }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+      .container { padding: 5px; }
+      
+      .game-area {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+      }
+      
+      .game-info {
+        flex-direction: column;
+        text-align: center;
+        gap: 5px;
+      }
+      
+      header { padding: 10px; margin-bottom: 10px; }
+      .info { padding: 15px; margin: 10px 0; }
+    }
+    
+    @media (max-width: 480px) {
+      .game-area {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 8px;
+      }
+      
+      .item {
+        padding: 8px;
+      }
+      
+      #level-buttons button {
+        padding: 10px 15px;
+        font-size: 0.9rem;
+      }
+    }
+    
+    /* Animations */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .game-area .item {
+      animation: fadeIn 0.5s ease forwards;
+    }
+    
+    .game-area .item:nth-child(1) { animation-delay: 0.1s; }
+    .game-area .item:nth-child(2) { animation-delay: 0.2s; }
+    .game-area .item:nth-child(3) { animation-delay: 0.3s; }
+    .game-area .item:nth-child(4) { animation-delay: 0.4s; }
+    .game-area .item:nth-child(5) { animation-delay: 0.5s; }
+    .game-area .item:nth-child(6) { animation-delay: 0.6s; }
+    .game-area .item:nth-child(7) { animation-delay: 0.7s; }
+    .game-area .item:nth-child(8) { animation-delay: 0.8s; }
   </style>
 </head>
 <body>
-  <h1>⭐ Trouve l'intrus : Les Héros Invisibles ⭐</h1>
-  <p>Le but ? Démasquer l'espèce en danger pour mieux la protéger !</p>
-  <div id="level-buttons">
-    <button onclick="startGame('facile')">Facile (4 choix)</button>
-    <button onclick="startGame('moyen')">Moyen (6 choix)</button>
-    <button onclick="startGame('difficile')">Difficile (8 choix)</button>
+  <div class="container">
+    <header>
+      <h1>⭐ Trouve l'intrus : Les Héros Invisibles ⭐</h1>
+      <p class="subtitle">Le but ? Démasquer l'espèce en danger pour mieux la protéger !</p>
+      <div id="level-buttons">
+        <button onclick="startGame('facile')">🟢 Facile</button>
+        <button onclick="startGame('moyen')">🟡 Moyen</button>
+        <button onclick="startGame('difficile')">🔴 Difficile</button>
+      </div>
+    </header>
+
+    <div class="game-info" id="gameInfo" style="display:none;">
+      <div class="score" id="scoreDisplay">Score : 0</div>
+      <div class="round-info" id="roundInfo">Manche 1/5</div>
+    </div>
+
+    <div class="game-area" id="gameArea"></div>
+    <div class="message" id="message"></div>
+    <div class="info" id="info"></div>
   </div>
-  <div class="score" id="scoreDisplay" style="display:none;">Score : 0</div>
-  <div class="game-area" id="gameArea"></div>
-  <div class="message" id="message"></div>
-  <div class="info" id="info"></div>
 
   <script>
     // === LISTES DES ESPÈCES ===
@@ -314,6 +488,8 @@ Très commun en ville, non insecte.`
     let usedEndangered = [];
 
     const scoreDisplay = document.getElementById('scoreDisplay');
+    const roundInfo = document.getElementById('roundInfo');
+    const gameInfo = document.getElementById('gameInfo');
     const infoDiv = document.getElementById('info');
     const levelButtons = document.getElementById('level-buttons');
     const messageDiv = document.getElementById('message');
@@ -339,10 +515,12 @@ Très commun en ville, non insecte.`
       
       totalRounds = gameConfig[level].rounds;
       
-      levelButtons.style.display = 'none';
-      scoreDisplay.style.display = 'block';
+      document.querySelector('header').style.display = 'none';
+      gameInfo.style.display = 'flex';
       updateScore();
+      updateRoundInfo();
       infoDiv.innerHTML = '';
+      messageDiv.innerHTML = '';
       
       showRound();
     }
@@ -350,8 +528,8 @@ Très commun en ville, non insecte.`
     // === AFFICHAGE D'UNE MANCHE ===
     function showRound() {
       infoDiv.innerHTML = '';
-      messageDiv.textContent = `Manche ${currentRound + 1}/${totalRounds}`;
-      messageDiv.style.color = '#2c3e50';
+      messageDiv.innerHTML = '';
+      updateRoundInfo();
       
       // Choisir un intrus qui n'a pas encore été utilisé
       const availableEndangered = endangeredSpecies.filter(species => !usedEndangered.includes(species));
@@ -372,9 +550,10 @@ Très commun en ville, non insecte.`
       
       // Afficher les cartes
       gameArea.innerHTML = '';
-      items.forEach(item => {
+      items.forEach((item, index) => {
         const div = document.createElement('div');
         div.className = 'item';
+        div.style.animationDelay = `${index * 0.1}s`;
         
         // Container pour l'image
         const imgContainer = document.createElement('div');
@@ -388,7 +567,7 @@ Très commun en ville, non insecte.`
         img.src = getImagePath(item);
         img.alt = item;
         img.onerror = function() {
-          imgContainer.innerHTML = `<div style="text-align:center; font-size:0.9em; color:#666;">📷<br>Image manquante</div>`;
+          imgContainer.innerHTML = `<div style="text-align:center; font-size:0.9em; color:#666; padding:10px;">📷<br>Image<br>manquante</div>`;
         };
         imgContainer.appendChild(img);
         
@@ -447,28 +626,53 @@ Très commun en ville, non insecte.`
       gameArea.innerHTML = '';
       
       let performance = '';
-      if (score >= totalRounds * 10) performance = '🏆 Excellent !';
-      else if (score >= totalRounds * 7) performance = '🥇 Très bien !';
-      else if (score >= totalRounds * 5) performance = '🥈 Bien !';
-      else performance = '🥉 À améliorer !';
+      let emoji = '';
+      if (score >= totalRounds * 10) { performance = 'Excellent !'; emoji = '🏆'; }
+      else if (score >= totalRounds * 7) { performance = 'Très bien !'; emoji = '🥇'; }
+      else if (score >= totalRounds * 5) { performance = 'Bien !'; emoji = '🥈'; }
+      else { performance = 'À améliorer !'; emoji = '🥉'; }
       
       messageDiv.innerHTML = `
-        <div style="font-size: 1.4em; margin-bottom: 10px;">${performance}</div>
-        <div>Score final : ${score} points</div>
-        <div style="font-size: 0.9em; margin-top: 10px;">
-          Merci d'avoir joué pour la protection de la biodiversité !
+        <div style="font-size: 1.5em; margin-bottom: 15px;">${emoji} ${performance}</div>
+        <div style="font-size: 1.3em; margin-bottom: 10px;">Score final : <span style="color: #27ae60;">${score} points</span></div>
+        <div style="font-size: 1em; opacity: 0.8;">
+          Merci d'avoir joué pour la protection de la biodiversité ! 🌱
         </div>
+        <button onclick="restartGame()" style="
+          margin-top: 20px;
+          padding: 12px 24px;
+          background: linear-gradient(135deg, #27ae60, #2ecc71);
+          border: none;
+          color: white;
+          border-radius: 25px;
+          cursor: pointer;
+          font-size: 1em;
+          font-weight: bold;
+          box-shadow: 0 4px 15px rgba(39,174,96,0.3);
+        ">🔄 Rejouer</button>
       `;
       messageDiv.style.color = '#27ae60';
       
       infoDiv.innerHTML = '';
-      levelButtons.style.display = 'block';
-      scoreDisplay.style.display = 'none';
+    }
+
+    // === REDÉMARRAGE ===
+    function restartGame() {
+      document.querySelector('header').style.display = 'block';
+      gameInfo.style.display = 'none';
+      messageDiv.innerHTML = '';
+      infoDiv.innerHTML = '';
+      gameArea.innerHTML = '';
     }
 
     // === MISE À JOUR DU SCORE ===
     function updateScore() {
       scoreDisplay.textContent = `Score : ${score}`;
+    }
+
+    // === MISE À JOUR DES INFOS DE MANCHE ===
+    function updateRoundInfo() {
+      roundInfo.textContent = `Manche ${currentRound + 1}/${totalRounds}`;
     }
   </script>
 </body>
