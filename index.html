@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Jeu : Trouve l'intrus - Insectes en Danger</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      background-color: #f0fdf4;
+      color: #333;
+      padding: 15px;
+      margin: 0;
+      min-height: 100vh;
+    }
+    
+    h1 {
+      color: #1a8f5c;
+      font-size: 1.8rem;
+      margin-bottom: 15px;
+      line-height: 1.2;
+    }
+    
+    p {
+      font-size: 1.1rem;
+      margin-bottom: 25px;
+      padding: 0 10px;
+      line-height: 1.4;
+    }
+    
+    .game-area {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 15px;
+      max-width: 400px;
+      margin: 0 auto;
+      padding: 0 10px;
+    }
+    
+    .item {
+      background-color: #ffffff;
+      border: 3px solid #1a8f5c;
+      border-radius: 12px;
+      min-height: 80px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      font-size: 1.2rem;
+      font-weight: 600;
+      transition: all 0.2s ease;
+      padding: 15px;
+      text-align: center;
+      word-wrap: break-word;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    
+    .item:hover, .item:active {
+      transform: scale(1.05);
+      background-color: #d2f5e4;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    }
+    
+    .item:active {
+      transform: scale(0.98);
+    }
+    
+    .message {
+      margin-top: 25px;
+      font-weight: bold;
+      font-size: 1.3rem;
+      padding: 15px;
+      border-radius: 8px;
+      min-height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      line-height: 1.3;
+    }
+    
+    .success {
+      background-color: #d4edda;
+      color: #155724;
+      border: 2px solid #c3e6cb;
+    }
+    
+    .error {
+      background-color: #f8d7da;
+      color: #721c24;
+      border: 2px solid #f5c6cb;
+    }
+    
+    .restart-btn {
+      background-color: #1a8f5c;
+      color: white;
+      border: none;
+      padding: 12px 25px;
+      font-size: 1.1rem;
+      border-radius: 8px;
+      cursor: pointer;
+      margin-top: 15px;
+      font-weight: 600;
+      transition: background-color 0.2s;
+    }
+    
+    .restart-btn:hover, .restart-btn:active {
+      background-color: #146b47;
+    }
+    
+    /* Amélioration pour très petits écrans */
+    @media (max-width: 350px) {
+      .game-area {
+        grid-template-columns: 1fr;
+        max-width: 280px;
+      }
+      
+      .item {
+        min-height: 70px;
+        font-size: 1.1rem;
+      }
+      
+      h1 {
+        font-size: 1.6rem;
+      }
+    }
+    
+    /* Amélioration pour écrans moyens */
+    @media (min-width: 500px) {
+      .game-area {
+        grid-template-columns: repeat(3, 1fr);
+        max-width: 600px;
+      }
+      
+      .item {
+        min-height: 90px;
+        font-size: 1.3rem;
+      }
+    }
+    
+    /* Amélioration pour tablettes */
+    @media (min-width: 768px) {
+      .game-area {
+        grid-template-columns: repeat(4, 1fr);
+        max-width: 800px;
+      }
+      
+      .item {
+        min-height: 100px;
+        font-size: 1.4rem;
+      }
+      
+      h1 {
+        font-size: 2.2rem;
+      }
+      
+      p {
+        font-size: 1.3rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <h1>⭐ Trouve l'intrus : Sauve les insectes !</h1>
+  <p>Parmi ces éléments, un seul n'est pas un insecte menacé. Clique sur l'intrus !</p>
+  <div class="game-area" id="gameArea"></div>
+  <div class="message" id="message"></div>
+  <button class="restart-btn" id="restartBtn" onclick="displayGame()" style="display: none;">🔄 Rejouer</button>
+  
+  <script>
+    const items = [
+      "🐝 Abeille",
+      "🦋 Papillon",
+      "🐞 Coccinelle",
+      "🦟 Libellule",
+      "🚁 Drone",
+      "🦗 Sauterelle",
+      "🐜 Fourmi",
+      "🪲 Scarabée"
+    ];
+    
+    const correctAnswer = "🚁 Drone";
+    
+    function shuffle(array) {
+      return array.sort(() => Math.random() - 0.5);
+    }
+    
+    function displayGame() {
+      const shuffled = shuffle([...items]);
+      const gameArea = document.getElementById("gameArea");
+      const message = document.getElementById("message");
+      const restartBtn = document.getElementById("restartBtn");
+      
+      gameArea.innerHTML = "";
+      message.textContent = "";
+      message.className = "message";
+      restartBtn.style.display = "none";
+      
+      shuffled.forEach(item => {
+        const div = document.createElement("div");
+        div.className = "item";
+        div.textContent = item;
+        div.onclick = () => {
+          // Désactiver tous les boutons après un clic
+          const allItems = document.querySelectorAll('.item');
+          allItems.forEach(btn => btn.style.pointerEvents = 'none');
+          
+          if (item === correctAnswer) {
+            message.textContent = "✅ Excellent ! Le drone est bien l'intrus. Les autres sont tous des insectes menacés qu'il faut protéger !";
+            message.className = "message success";
+            div.style.backgroundColor = "#d4edda";
+            div.style.borderColor = "#28a745";
+          } else {
+            message.textContent = "❌ Oups ! " + item.split(' ')[1] + " est un insecte menacé qu'il faut protéger. Essaie encore !";
+            message.className = "message error";
+            div.style.backgroundColor = "#f8d7da";
+            div.style.borderColor = "#dc3545";
+            
+            // Réactiver les boutons après 2 secondes pour une nouvelle tentative
+            setTimeout(() => {
+              allItems.forEach(btn => btn.style.pointerEvents = 'auto');
+              div.style.backgroundColor = "#ffffff";
+              div.style.borderColor = "#1a8f5c";
+              message.textContent = "";
+              message.className = "message";
+            }, 2500);
+            return;
+          }
+          
+          restartBtn.style.display = "inline-block";
+        };
+        gameArea.appendChild(div);
+      });
+    }
+    
+    // Démarrer le jeu
+    displayGame();
+  </script>
+</body>
+</html>
